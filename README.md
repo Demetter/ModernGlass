@@ -15,6 +15,7 @@
 <p align="center">
   <a href="#installation"><b>Install</b></a> &nbsp;·&nbsp;
   <a href="#configuration">Configure</a> &nbsp;·&nbsp;
+  <a href="#thumbz">thumbz</a> &nbsp;·&nbsp;
   <a href="#controls">Controls</a> &nbsp;·&nbsp;
   <a href="docs/USER_OPTS.md">All options</a> &nbsp;·&nbsp;
   <a href="#credits">Credits</a>
@@ -33,7 +34,7 @@
 - **Glass panel.** The playback controls sit on a floating panel with rounded corners. With `vo=gpu-next`, a shader blurs the video behind the panel, distorts it slightly near the edges, adds a highlight along the top edge and draws a shadow under the panel.
 - **Brightness adjustment.** Over bright video the panel is darkened and its shadow is made stronger, so white text and icons stay readable.
 - **Menus.** The audio, subtitle, playlist, chapter, speed and audio output lists open as menus above their buttons. The ⋯ button opens a menu with playback speed, chapters, audio output, loop, keep on top, screenshot and statistics.
-- **Thumbnails.** thumbz shows a preview frame above the seekbar while you hover it. See [Thumbnails](#thumbnails) for how it works and how it compares to thumbfast.
+- **thumbz.** A seekbar thumbnailer written for ModernGlass that shows a preview frame above the seekbar while you hover it. See [thumbz](#thumbz) for how it works and how it compares to thumbfast.
 - **Size.** The controls scale with the window up to a maximum size (`vidscale_max`), which is multiplied by the system's display scaling. On large monitors they stay the size they have on a 1080p screen.
 - **Accessibility options.** `glass_reduce_transparency` makes the panels nearly opaque, `glass_increase_contrast` makes them black with a visible border, and `reduce_motion` turns off the spring and scale animations.
 - **GPU use.** The blur is computed on a copy of the frame scaled down to 270 rows, and the shader is turned off while the controls are hidden.
@@ -77,24 +78,28 @@
 
 ### Accessibility
 
-<table>
-  <tr><td><img src="assets/panel.webp" alt="Default glass"></td></tr>
-  <tr><td align="center"><sub>Default</sub></td></tr>
-  <tr><td><img src="assets/a11y-contrast.webp" alt="Increase contrast"></td></tr>
-  <tr><td align="center"><sub><code>glass_increase_contrast=yes</code></sub></td></tr>
-  <tr><td><img src="assets/a11y-reduce.webp" alt="Reduce transparency"></td></tr>
-  <tr><td align="center"><sub><code>glass_reduce_transparency=yes</code></sub></td></tr>
-</table>
+<p align="center">
+  <img src="assets/panel.webp" alt="Default glass" width="100%">
+  <br><sub>Default</sub>
+</p>
+<p align="center">
+  <img src="assets/a11y-contrast.webp" alt="Increase contrast" width="100%">
+  <br><sub><code>glass_increase_contrast=yes</code></sub>
+</p>
+<p align="center">
+  <img src="assets/a11y-reduce.webp" alt="Reduce transparency" width="100%">
+  <br><sub><code>glass_reduce_transparency=yes</code></sub>
+</p>
 
 `reduce_motion=yes` turns off the spring and scale animations. Fades are kept.
 
-## Thumbnails
+## thumbz
 
 <p align="center">
   <img src="assets/thumbz-race.gif" alt="thumbfast and thumbz rendering the same 24 thumbnails, with stopwatches" width="100%">
 </p>
 
-thumbz is the seekbar thumbnailer that comes with ModernGlass. It renders thumbnails in a second mpv that runs in the background. When the controls appear, it starts on thumbnails spread across the whole file. While you move along the seekbar it shows the closest finished one, and when you stop it renders the exact frame. Thumbnails are kept until the file changes.
+thumbz is a seekbar thumbnailer written for ModernGlass, as a replacement for thumbfast. It renders thumbnails in a second mpv that runs in the background. When the controls appear, it starts on thumbnails spread across the whole file. While you move along the seekbar it shows the closest finished one, and when you stop it renders the exact frame. Thumbnails are kept until the file changes.
 
 | | thumbfast | thumbz |
 | --- | :---: | :---: |
