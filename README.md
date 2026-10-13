@@ -91,81 +91,49 @@
 ## Thumbnails
 
 <p align="center">
-  <img src="assets/thumbz-vs-thumbfast.gif" alt="thumbfast and thumbz side by side during the same seekbar movements" width="100%">
+  <img src="assets/thumbz-race.gif" alt="thumbfast and thumbz rendering the same 24 thumbnails, with stopwatches" width="100%">
 </p>
 
-thumbz is the seekbar thumbnailer included with ModernGlass. It runs a second mpv in the background that decodes frames and scales them to thumbnail size.
-
-- When the controls appear, it starts rendering keyframe thumbnails spread across the whole file. The ticks on the bar in the animation above are those thumbnails.
-- While the pointer moves, it shows the closest finished thumbnail and renders keyframes near the pointer. When the pointer stops, it renders the exact frame.
-- Finished thumbnails are kept for the current file, so returning to a position needs no new decoding.
-- It decodes with the player's hardware decoding setting (`hwdec`) and skips the loop filter, which makes no visible difference at thumbnail size. HDR video is tone-mapped.
-
-The animation replays a test with thumbfast and thumbz in their default settings: the same 5-minute 1080p H.264 video (a keyframe every 10 seconds) and the same pointer movements, sent to each one. Both decoded in software on a 2-core machine. Median of three runs:
+thumbz is the seekbar thumbnailer that comes with ModernGlass. It renders thumbnails in a second mpv that runs in the background. When the controls appear, it starts on thumbnails spread across the whole file. While you move along the seekbar it shows the closest finished one, and when you stop it renders the exact frame. Thumbnails are kept until the file changes.
 
 | | thumbfast | thumbz |
-| --- | --- | --- |
-| First thumbnail after the pointer reaches the seekbar | 0.19 s | 0.00 s |
-| Distance between the shown frame and the pointer during the first sweep | 11.1 s | 5.3 s |
-| Time without a thumbnail during the first sweep | 7% | 1% |
-| Exact frame after the pointer stops | 0.30 s | 0.26 s |
-| CPU time used during the test | 7.8 s | 6.9 s |
+| --- | :---: | :---: |
+| Time for all 24 thumbnails | 12.8 s | 9.7 s |
+| CPU time used | 14.6 s | 12.4 s |
+
+<sub>Exact frames at 24 points of a 5-minute 1080p H.264 video, requested one after another. Default settings for both, software decoding on a 2-core machine, median of 5 runs. In 2 of the 5 runs thumbfast did not show the exact frame for the first point, and the test moved on after 8 s. thumbz also uses the player's hardware decoding when it is turned on.</sub>
 
 ## Installation
 
-**1. Copy the files** into your mpv folder:
+**1. Copy the files** into your mpv folder: `%APPDATA%\mpv` on Windows, `~/.config/mpv` on Linux, `~/Library/Application Support/mpv` on macOS.
 
-```
-📁 mpv/
-├── 📁 fonts/
-│   ├── Inter-Medium.ttf
-│   └── Inter-SemiBold.ttf
-├── 📁 script-opts/
-│   ├── modernz.conf        (optional, all options with their defaults)
-│   └── thumbz.conf         (optional)
-└── 📁 scripts/
-    ├── modernz.lua
-    └── thumbz.lua
-```
+| From this repository | To the mpv folder |
+| --- | --- |
+| `modernz.lua`, `thumbz.lua` | `scripts/` |
+| `fonts/Inter-Medium.ttf`, `fonts/Inter-SemiBold.ttf` | `fonts/` |
+| `modernz.conf`, `thumbz.conf` (optional) | `script-opts/` |
 
-| System  | mpv folder                                |
-| ------- | ----------------------------------------- |
-| Windows | `%APPDATA%\mpv\`                          |
-| macOS   | `~/Library/Application Support/mpv/`      |
-| Linux   | `~/.config/mpv/`                          |
-
-**2. Add to `mpv.conf`:**
+**2. Add these lines to `mpv.conf`:**
 
 ```ini
-osc=no                        # turn off mpv's own controls
-vo=gpu-next                   # needed for the blur behind the panels
-video-sync=display-resample   # redraw the controls at the display's refresh rate
+osc=no
+vo=gpu-next
+video-sync=display-resample
 ```
 
-`border=no` removes the system title bar. The minimize, maximize and close buttons are then drawn by the script in the top right corner.
+`osc=no` turns off mpv's own controls. `vo=gpu-next` is needed for the blur behind the panels; with other video outputs the panels are drawn without it. `video-sync=display-resample` redraws the controls at the display's refresh rate. With `border=no` the system title bar is removed and the script draws its own window buttons.
 
-> [!NOTE]
-> With other video outputs the panels are drawn without the blur, at a higher opacity.
-
-### Upgrading from ModernZ
-
-ModernGlass keeps ModernZ's file names, options and script bindings, so it replaces `modernz.lua` in place and your `modernz.conf` and `input.conf` keep working. The icons are drawn by the script now, so `modernz-icons.ttf` is no longer needed. thumbz replaces thumbfast; remove `thumbfast.lua` if you have it.
+**Coming from ModernZ:** ModernGlass uses the same file names, options and script bindings, so it replaces `modernz.lua` and your `modernz.conf` and `input.conf` keep working. `modernz-icons.ttf` and `thumbfast.lua` are no longer used and can be deleted.
 
 ## Configuration
 
-Put `modernz.conf` in `script-opts`. It lists every option with its default, or you can write only the ones you change:
+`modernz.conf` in `script-opts` lists every option with its default. It can also hold only the lines you change:
 
 ```ini
-# glass
 glass_opacity=40
 panel_max_width=1400
-
-# controls: blue progress bar, file name as the title
 seekbarfg_color=#0A84FF
-title=${filename}
 ```
-
-Glass options:
 
 | Option | Default | What it does |
 | --- | --- | --- |
@@ -178,28 +146,23 @@ Glass options:
 | `panel_max_width` | `0` | widest the panel gets (`0` = full width) |
 | `vidscale_max` | `1.35` | maximum size of the controls, multiplied by the display scaling |
 
-The full list is in the [options guide](docs/USER_OPTS.md). Other layouts from ModernZ (`classic`, `compact`, `mini`, `seekbar`) are still available with `layout=`.
+Every option is described in the [options guide](docs/USER_OPTS.md). ModernZ's other layouts (`classic`, `compact`, `mini`, `seekbar`) are available with `layout=`.
 
 ## Controls
 
-Left click does a button's main action, right click its secondary one, and middle click (or <kbd>Shift</kbd>+click) an alternative. Every interaction is listed in the [controls guide](docs/CONTROLS.md).
-
-ModernGlass sets no keyboard shortcuts of its own. These can be added to `input.conf`:
+Left click runs a button's main action, right click a second action, and middle click or <kbd>Shift</kbd>+click a third. The [controls guide](docs/CONTROLS.md) lists them all. ModernGlass adds no keyboard shortcuts; these can be added to `input.conf`:
 
 ```
-v   script-binding modernz/visibility              # cycle visibility modes
-w   script-binding modernz/progress-toggle         # toggle persistent progress
-x   script-message-to modernz osc-show             # show the controls
-y   script-message-to modernz osc-hide             # hide the controls
+v   script-binding modernz/visibility        # cycle visibility modes
+w   script-binding modernz/progress-toggle   # toggle persistent progress
+x   script-message-to modernz osc-show       # show the controls
+y   script-message-to modernz osc-hide       # hide the controls
 ```
 
-## Translations
+## More
 
-Put [`modernz-locale.json`](extras/locale/modernz-locale.json) in `script-opts` and set `language=` in `modernz.conf`, for example `language=zh`. Available languages and how to add one are in the [translations guide](docs/TRANSLATIONS.md).
-
-## Extras
-
-The [extra scripts](extras/) from ModernZ work with ModernGlass too: Open-File, Pause-Indicator-Lite and PiP-Lite.
+- **Translations:** put [`modernz-locale.json`](extras/locale/modernz-locale.json) in `script-opts` and set `language=` in `modernz.conf`, for example `language=zh`. The [translations guide](docs/TRANSLATIONS.md) lists the languages.
+- **Extra scripts:** ModernZ's [extras](extras/) (Open-File, Pause-Indicator-Lite, PiP-Lite) work with ModernGlass.
 
 ## Credits
 

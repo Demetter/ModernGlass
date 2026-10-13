@@ -34,7 +34,7 @@ That said, we are still open to new ideas—we just aim to keep things practical
 - [ModernGlass controls manual](/docs/CONTROLS.md)
 - [ModernGlass user options manual](/docs/USER_OPTS.md) 
 - [ModernGlass translations and locales](/docs/TRANSLATIONS.md)
-- [ModernGlass extra scripts](/#extras)
+- [ModernGlass extra scripts](/#more)
 - [ModernGlass history](/#credits)
 - [mpv manual](https://mpv.io/manual/master/)
 
