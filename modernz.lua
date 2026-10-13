@@ -233,6 +233,7 @@ local user_opts = {
     panel_margin = 20,                     -- distance between the floating panel and the window edges
     panel_max_width = 0,                   -- widest the floating panel gets (0 = always full width)
     muted_text_color = "#AEB7C4",          -- secondary text: duration, chapter title, menu details
+    playlist_thumbnails = true,            -- small thumbnails beside the videos in the folder and playlist menus (made by thumbz)
     modern_menus = true,                   -- show track, playlist, chapter and audio output lists as ModernZ menus instead of mpv's select lists
     menu_max_items = 9,                    -- rows a menu shows before it scrolls
 
@@ -2974,7 +2975,7 @@ end
 local menu = nil          -- the open menu: {kind, title, items, anchor, scroll, hover, pressed, back, t0, geo}
 local menu_closing = nil  -- a menu fading away after it was closed
 local menu_frame = 0      -- bumped once per render, so a menu's geometry is worked out once per frame
-local close_menu, open_menu, render_menu, menu_event, menu_visual_rect
+local close_menu, open_menu, render_menu, menu_event, menu_visual_rect, menu_covers_sync, menu_cover_ready
 do -- (in a block: the main chunk is close to Lua's limit of 200 locals)
 
 local MENU = {row_h = 32, sep_h = 9, header_h = 32, pad = 6, radius = 16, fs = 14, meta_fs = 12.5, title_fs = 12.5, glyph = 16, icon = 18}
@@ -3141,11 +3142,51 @@ local function strip_ext(name)
     return (name:gsub("%.[%w]+$", ""))
 end
 
+-- Covers: a small still beside each video in the folder and playlist menus. thumbz makes
+-- them (once per file, kept on disk); they're shown with overlay-add, since ASS can't
+-- draw pictures, while the menu stands still, over a tile that moves with the menu.
+local COVER_W, COVER_H, COVER_R = 48, 27, 4.2   -- in layout units (the pictures are 160x90)
+local COVER_ROW_H = 40
+local COVER_SLOT0, COVER_SLOTS = 50, 14         -- overlay ids (thumbz's seekbar one is 42)
+local cover_files = {}                          -- path -> picture, or false (none possible)
+local cover_asked = {}
+local cover_want, cover_shown = {}, {}          -- overlay id -> {file, x, y, w, h}
+
+local function covers_on()
+    return user_opts.playlist_thumbnails and thumbz.present and media_kind() ~= "audio"
+end
+
+menu_cover_ready = function(path, file)
+    cover_files[path] = file ~= "" and file or false
+    if menu then request_tick() end
+end
+
+menu_covers_sync = function()
+    local d = state.osd_dimensions or {}
+    local sx, sy = (d.w or 0) / osc_param.playresx, (d.h or 0) / osc_param.playresy
+    for id = COVER_SLOT0, COVER_SLOT0 + COVER_SLOTS - 1 do
+        local want, shown = cover_want[id], cover_shown[id]
+        if want and sx > 0 then
+            local x, y = math.floor(want.x * sx + 0.5), math.floor(want.y * sy + 0.5)
+            local w, h = math.floor(COVER_W * sx + 0.5), math.floor(COVER_H * sy + 0.5)
+            if not shown or shown.file ~= want.file or shown.x ~= x or shown.y ~= y or shown.w ~= w or shown.h ~= h then
+                mp.command_native_async({"overlay-add", id, x, y, want.file, 0, "bgra", 160, 90, 640, w, h}, function() end)
+                cover_shown[id] = {file = want.file, x = x, y = y, w = w, h = h}
+            end
+        elseif shown then
+            mp.command_native_async({"overlay-remove", id}, function() end)
+            cover_shown[id] = nil
+        end
+    end
+    cover_want = {}
+end
+
 -- title, items, header; an item: {label, meta, active, action, icon, submenu, arg (for
 -- the submenu), sep (line above)}; header: a link on the title row {label, submenu, arg}
 local function menu_items(kind, arg)
     local items, title, header = {}, nil, nil
     local path, dir = current_file()
+    local with_covers = covers_on()
     if kind == "playlist" and dir and (state.playlist_count or 0) <= 1 then
         kind, arg = "folder", dir  -- a single file: the videos in its folder
     end
@@ -3190,7 +3231,10 @@ local function menu_items(kind, arg)
                 local f = utils.join_path(cwd, entry.filename or "")
                 one_dir = not f:find("^%a[%w+.-]*://") and same_path(utils.split_path(f), dir)
             end
+            local file = entry.filename and not entry.filename:find("^%a[%w+.-]*://")
+                and utils.join_path(cwd, entry.filename) or nil
             items[#items + 1] = {label = name, meta = tostring(i), active = entry.current or entry.playing,
+                cover = with_covers and file or nil,
                 action = function() mp.commandv("playlist-play-index", tostring(i - 1)) end}
         end
         if one_dir then title = dir_name(dir) end
@@ -3202,6 +3246,7 @@ local function menu_items(kind, arg)
         for i, f in ipairs(files) do
             items[#items + 1] = {label = strip_ext(f), meta = tostring(i),
                 active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+                cover = with_covers and utils.join_path(arg, f) or nil,
                 action = function() play_folder(arg, files, i) end}
         end
         local up = parent_dir(arg)
@@ -3220,8 +3265,9 @@ local function menu_items(kind, arg)
         end
         local files = list_media(arg, media_kind())
         for i, f in ipairs(files) do
-            items[#items + 1] = {icon = "menu_video", label = strip_ext(f), sep = i == 1 and #items > 0,
+            items[#items + 1] = {icon = not with_covers and "menu_video" or nil, label = strip_ext(f), sep = i == 1 and #items > 0,
                 active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+                cover = with_covers and utils.join_path(arg, f) or nil,
                 action = function() play_folder(arg, files, i) end}
         end
         if #items == 0 then
@@ -3367,6 +3413,8 @@ end
 
 close_menu = function()
     if not menu then return end
+    cover_want = {}
+    menu_covers_sync()
     menu.closing = mp.get_time()
     menu_closing = menu.geo and menu or nil
     menu = nil
@@ -3395,18 +3443,20 @@ open_menu = function(kind, anchor_name, opts)
     local origin = menu and menu.geo
     if menu then menu = nil else menu_keys(true) end
     menu_closing = nil
-    local active, icons_mode = 1, false
+    local active, icons_mode, covers = 1, false, false
     for i, item in ipairs(items) do
         item.raw = item.label
         item.label = esc(item.label)
         item.meta = (item.meta and item.meta ~= "") and esc(item.meta) or nil
         if item.active and active == 1 then active = i end
-        if item.icon then icons_mode = true end
+        if item.icon or item.cover then icons_mode = true end
+        if item.cover then covers = true end
     end
     state.menu_open = true
     if header then header.label = esc(header.label) end
     menu = {kind = kind, arg = opts.arg, stack = stack, title = title and esc(title) or nil, items = items,
             header = #stack == 0 and header or nil,
+            covers = covers, row_h = covers and COVER_ROW_H or MENU.row_h,
             anchor = anchor_name, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
             -- going into a submenu or back: the card reshapes from the old one in place and
             -- the new rows slide in from the side they come from
@@ -3484,7 +3534,7 @@ local function menu_geometry(m)
             + (item.submenu and 18 or 0) + (m.icons and item.active ~= nil and 22 or 0)
         if w > widest then widest = w end
     end
-    local lead = m.icons and 40 or 32
+    local lead = m.covers and 68 or m.icons and 40 or 32
     local w = math.floor(math.max(200, math.min(widest + lead + 2 * MENU.pad + 18, math.min(440, W - 24))))
 
     local ax, ay = W / 2, H - 120
@@ -3501,7 +3551,7 @@ local function menu_geometry(m)
 
     local header = m.title and MENU.header_h or MENU.pad
     local avail = bottom - 12 - header - MENU.pad
-    local rows = math.min(#m.items, math.max(3, user_opts.menu_max_items), math.max(1, math.floor(avail / MENU.row_h)))
+    local rows = math.min(#m.items, math.max(3, user_opts.menu_max_items), math.max(1, math.floor(avail / m.row_h)))
     local scrolls = #m.items > rows
     m.scroll = math.max(0, math.min(m.scroll, #m.items - rows))
     -- row offsets from the top of the list (separators only when the whole list shows)
@@ -3510,7 +3560,7 @@ local function menu_geometry(m)
         local item = m.items[m.scroll + r]
         if item and item.sep and not scrolls then y = y + MENU.sep_h end
         ys[r] = y
-        y = y + MENU.row_h
+        y = y + m.row_h
     end
     local h = header + y + MENU.pad
     local left, right = 12, W - 12
@@ -3530,7 +3580,7 @@ local function menu_row_at(mx, my)
     if (menu.back or menu.header) and my >= g.y and my < g.top then return 0 end
     for r = 1, g.rows do
         local y = g.top + g.ys[r]
-        if my >= y and my < y + MENU.row_h then
+        if my >= y and my < y + menu.row_h then
             local i = menu.scroll + r
             return i <= #menu.items and i or nil
         end
@@ -3653,12 +3703,14 @@ render_menu = function(master_ass, m)
     end
 
     local right = inner_x + inner_w - 10
+    local wanted = {}
     for r = 1, g.rows do
         local i = menu.scroll + r
         local item = menu.items[i]
         if not item then break end
         local ry = g.top + g.ys[r]
-        local cy = ry + MENU.row_h / 2
+        local row_h = menu.row_h
+        local cy = ry + row_h / 2
         if item.sep and not g.scrolls then
             ass:new_event()
             ass:append(string.format("{\\rDefault\\an7\\bord0\\shad0\\blur0\\1c&HFFFFFF&\\1a&H%02X&%s}", mult_alpha(0xE2, cfade), cut_tag))
@@ -3667,7 +3719,7 @@ render_menu = function(master_ass, m)
             ass:rect_cw(0, 0, (inner_w - 20) * k, math.max(0.5, glass_edge_width()) * k)
             ass:draw_stop()
         end
-        if menu.hover == i then highlight(ry + 1, MENU.row_h - 2, menu.pressed == i) end
+        if menu.hover == i then highlight(ry + 1, row_h - 2, menu.pressed == i) end
 
         -- rows next to the edge of a scrolled list fade out
         local edge = 0
@@ -3676,10 +3728,31 @@ render_menu = function(master_ass, m)
             if menu.scroll + g.rows < #menu.items and r > g.rows - 2 then edge = math.max(edge, r == g.rows and 0x99 or 0x44) end
         end
 
-        local label_x = inner_x + (menu.icons and 38 or 30)
+        local label_x = inner_x + (menu.covers and 66 or menu.icons and 38 or 30)
         local trail = right
+        if item.cover then
+            -- the tile moves with the menu; the picture goes on top once it stands still
+            local tx, ty = inner_x + 8, cy - COVER_H / 2
+            ass:new_event()
+            ass:append(string.format("{\\rDefault\\an7\\bord0\\shad0\\blur0\\1c&HFFFFFF&\\1a&H%02X&%s}",
+                mult_alpha(mult_alpha(0xEA, edge), cfade), cut_tag))
+            ass:pos(XC(tx), Y(ty))
+            ass:draw_start()
+            ass:round_rect_cw(0, 0, COVER_W * k, COVER_H * k, COVER_R * k)
+            ass:draw_stop()
+            local file = cover_files[item.cover]
+            if file == nil and not cover_asked[item.cover] then
+                cover_asked[item.cover] = true
+                wanted[#wanted + 1] = item.cover
+            end
+            local still = not m.closing and mo.slide == 0 and math.abs(k - 1) < 0.003 and cfade < 8
+                and (not m.from or mo.done)
+            if file and still and edge < 0x80 and r <= COVER_SLOTS then
+                cover_want[COVER_SLOT0 + r - 1] = {file = file, x = XC(tx), y = Y(ty)}
+            end
+        end
         if menu.icons then
-            if item.icon then glyph(item.icon, inner_x + 18, cy, MENU.icon, edge) end
+            if item.icon then glyph(item.icon, inner_x + (menu.covers and 32 or 18), cy, MENU.icon, edge) end
             if item.active then
                 glyph("menu_check", right - 6, cy, MENU.glyph, edge)
                 trail = right - 22
@@ -3696,12 +3769,17 @@ render_menu = function(master_ass, m)
         local label_right = trail - (item.meta and meta_w + 14 or 0)
         local label = fit_label(item, label_right - label_x, st.label .. "{\\fs" .. MENU.fs .. "}")
         text(label_x, cy, 4, st.label, MENU.fs, label, edge,
-             clip_rect(XC(label_x - 2), Y(ry), XC(label_right), Y(ry + MENU.row_h)))
+             clip_rect(XC(label_x - 2), Y(ry), XC(label_right), Y(ry + row_h)))
+    end
+
+    -- covers still to make: the rows on screen first
+    if #wanted > 0 then
+        mp.commandv("script-message-to", "thumbz", "covers", utils.format_json(wanted))
     end
 
     -- scroll position
     if g.scrolls then
-        local track_y, track_h = g.top + 4, g.ys[g.rows] + MENU.row_h - 8
+        local track_y, track_h = g.top + 4, g.ys[g.rows] + menu.row_h - 8
         local thumb_h = math.max(18, track_h * g.rows / #menu.items)
         local thumb_y = track_y + (track_h - thumb_h) * menu.scroll / (#menu.items - g.rows)
         ass:new_event()
@@ -6601,6 +6679,7 @@ local function render()
         if state.osc_visible then render_menu(ass, menu) else close_menu() end
     end
     if menu_closing and state.osc_visible then render_menu(ass, menu_closing) end
+    menu_covers_sync()
 
     if user_opts.persistent_progress or state.persistent_progress_toggle then
         render_persistent_progress(ass)
@@ -7010,10 +7089,15 @@ mp.register_script_message("thumbz-info", function(json)
         return
     end
     thumbz.width, thumbz.height, thumbz.disabled = data.width, data.height, data.disabled
+    thumbz.present = true
     -- the OSC may already be up (e.g. osc_on_start): let thumbz get ready right away
     if state.osc_visible and not thumbz.disabled then
         mp.commandv("script-message-to", "thumbz", "prepare")
     end
+end)
+
+mp.register_script_message("thumbz-cover", function(path, file)
+    menu_cover_ready(path, file)
 end)
 
 -- validate string type user options

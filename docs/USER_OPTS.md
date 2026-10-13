@@ -153,6 +153,7 @@ These options apply to the default layout's panel and to the menus, tooltips, th
 | panel_max_width           | 0       | widest the floating panel gets (`0` = always full width)                                                                                         |
 | muted_text_color          | #AEB7C4 | color of secondary text: duration, chapter title, menu details                                                                                   |
 | modern_menus              | yes     | show track, playlist, chapter and audio output lists as glass menus instead of mpv's select lists                                                |
+| playlist_thumbnails | yes | small thumbnails beside the videos in the folder and playlist menus (made by Thumbz) |
 | menu_max_items            | 9       | rows a menu shows before it scrolls                                                                                                              |
 
 ### Colors and style

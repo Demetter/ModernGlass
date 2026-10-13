@@ -18,15 +18,19 @@
         rests. Exact decodes and storyboard work are abandoned the moment a newer
         hover comes in.
       * HDR is tone-mapped at thumbnail size, not at full video resolution.
+      * Covers: one small still per file for the folder and playlist menus, from 20%
+        into the file, made once by a short-lived mpv and kept in mpv's cache folder.
       * No helper programs: requests go through a small file, with a named-pipe
         wake-up on Windows.
 
-    Messages (sent by ModernZ)
+    Messages (sent by ModernGlass)
       script-message-to thumbz hover <time> <x> <y>   show the thumbnail for <time> at x, y
       script-message-to thumbz hide                    remove it
       script-message-to thumbz prepare                 the OSC appeared: start the renderer early
+      script-message-to thumbz covers <json: paths>    make covers for these files, these first
     Broadcast
       script-message thumbz-info <json: width, height, disabled>
+      script-message thumbz-cover <path> <file>        a 160x90 BGRA cover is ready ("" if none)
 
     Options: script-opts/thumbz.conf
     Inspired by thumbfast (https://github.com/po5/thumbfast); written from scratch.
@@ -1179,9 +1183,185 @@ mp.observe_property("pause", "bool", function(_, paused)
     end
 end)
 
+------------------------------------------------------------------------------
+-- Covers: one small still per file for ModernGlass's folder and playlist menus.
+-- A frame from 20% into the file, made once by a short-lived mpv and kept in mpv's
+-- cache folder, so a folder that was opened before shows its covers right away.
+------------------------------------------------------------------------------
+
+local COVER_W, COVER_H, COVER_R = 160, 90, 14
+local COVER_KEEP = 1000           -- covers kept on disk (the oldest go first)
+local cover_dir = nil
+local cover_queue = {}            -- paths waiting, the most recently asked for first
+local cover_busy = false
+local covers_trimmed = false
+
+local function cover_folder()
+    if not cover_dir then
+        local dir = mp.command_native({"expand-path", "~~cache/"})
+        local info = dir and utils.file_info(dir)
+        cover_dir = (info and info.is_dir) and (dir:gsub("[/\\]+$", "")) or folder
+    end
+    return cover_dir
+end
+
+-- named after the file's path, size and date (two small hashes, exact in doubles)
+local function cover_path(path)
+    local info = utils.file_info(path)
+    if not info or not info.is_file then return nil end
+    local key = path .. "|" .. info.size .. "|" .. info.mtime
+    local h1, h2 = 0, 0
+    for i = 1, #key do
+        local b = key:byte(i)
+        h1 = (h1 * 31 + b) % 2147483647
+        h2 = (h2 * 131 + b) % 1000000007
+    end
+    return string.format("%s%sthumbz_cover_%08x%08x.bgra", cover_folder(), sep, h1, h2)
+end
+
+-- drop the oldest covers once there are too many, once per session
+local function trim_covers()
+    if covers_trimmed then return end
+    covers_trimmed = true
+    local dir = cover_folder()
+    local list = {}
+    for _, name in ipairs(utils.readdir(dir, "files") or {}) do
+        if name:find("^thumbz_cover_") then
+            local p = dir .. sep .. name
+            local info = utils.file_info(p)
+            if info then list[#list + 1] = {p, info.mtime} end
+        end
+    end
+    if #list <= COVER_KEEP then return end
+    table.sort(list, function(a, b) return a[2] < b[2] end)
+    for i = 1, #list - math.floor(COVER_KEEP * 0.7) do os.remove(list[i][1]) end
+end
+
+-- rounded corners, anti-aliased (the pixels are premultiplied BGRA)
+local function round_corners(data)
+    local w, h, r = COVER_W, COVER_H, COVER_R
+    local function coverage(dx, dy)
+        return math.max(0, math.min(1, r - math.sqrt(dx * dx + dy * dy) + 0.5))
+    end
+    local function scaled(px, a)
+        if a >= 1 then return px end
+        local b, g, rr, al = px:byte(1, 4)
+        return string.char(math.floor(b * a + 0.5), math.floor(g * a + 0.5),
+                           math.floor(rr * a + 0.5), math.floor(al * a + 0.5))
+    end
+    local rows = {}
+    for y = 0, h - 1 do
+        local row = data:sub(y * w * 4 + 1, (y + 1) * w * 4)
+        local dy = y < r and (r - y - 0.5) or (y >= h - r and (y - (h - r) + 0.5)) or nil
+        if dy then
+            local left, right = {}, {}
+            for x = 0, r - 1 do
+                left[#left + 1] = scaled(row:sub(x * 4 + 1, x * 4 + 4), coverage(r - x - 0.5, dy))
+            end
+            for x = w - r, w - 1 do
+                right[#right + 1] = scaled(row:sub(x * 4 + 1, x * 4 + 4), coverage(x - (w - r) + 0.5, dy))
+            end
+            row = table.concat(left) .. row:sub(r * 4 + 1, (w - r) * 4) .. table.concat(right)
+        end
+        rows[#rows + 1] = row
+    end
+    return table.concat(rows)
+end
+
+local function cover_done(path, file)
+    mp.commandv("script-message", "thumbz-cover", path, file or "")
+end
+
+local function cover_args(path, out)
+    mpv_candidates = mpv_candidates or find_mpv_candidates()
+    local args = use_nice and {"nice", "-n", tostring(nice_levels[o.priority])} or {}
+    for _, arg in ipairs({
+        mpv_candidates[1], "--no-config", "--msg-level=all=no", "--input-terminal=no",
+        "--load-scripts=no", "--osc=no", "--ytdl=no", "--input-default-bindings=no",
+        "--start=20%", "--frames=1", "--hr-seek=no", "--aid=no", "--sid=no",
+        "--vd-lavc-skiploopfilter=all", "--vd-lavc-fast",
+        "--vd-lavc-threads=" .. math.floor(o.threads), "--hwdec=" .. renderer_hwdec(),
+        string.format("--vf=scale=w=%d:h=%d:force_original_aspect_ratio=increase:flags=%s,crop=w=%d:h=%d,format=bgra",
+                      COVER_W, COVER_H, o.scaler, COVER_W, COVER_H),
+        "--ovc=rawvideo", "--of=rawvideo", "--o=" .. out,
+    }) do args[#args + 1] = arg end
+    for _, name in ipairs({"load-stats-overlay", "load-auto-profiles", "load-select", "load-commands",
+                           "load-positioning", "load-context-menu", "media-controls"}) do
+        add_if(args, name, "no")
+    end
+    add_if(args, has_option("load-console") and "load-console" or "load-osd-console", "no")
+    if is_windows and o.priority ~= "" and o.priority ~= "normal" then add_if(args, "priority", o.priority) end
+    args[#args + 1] = "--"
+    args[#args + 1] = path
+    return args
+end
+
+-- one cover at a time, at low priority
+local function next_cover()
+    if cover_busy then return end
+    local path = table.remove(cover_queue, 1)
+    if not path then return end
+    local final = cover_path(path)
+    if not final then cover_done(path) return next_cover() end
+    if utils.file_info(final) then cover_done(path, final) return next_cover() end
+    cover_busy = true
+    local tmp = base .. "_cover.bgra"
+    os.remove(tmp)
+    local watchdog
+    local id = mp.command_native_async({name = "subprocess", args = cover_args(path, tmp),
+                                        playback_only = false, capture_stdout = true, capture_stderr = true},
+        function()
+            if watchdog then watchdog:kill() end
+            local f = io.open(tmp, "rb")
+            local data = f and f:read("*a")
+            if f then f:close() end
+            os.remove(tmp)
+            local ok = false
+            if data and #data == COVER_W * COVER_H * 4 then
+                local out = io.open(final, "wb")
+                if out then
+                    out:write(round_corners(data))
+                    out:close()
+                    ok = true
+                end
+            end
+            cover_done(path, ok and final or nil)
+            cover_busy = false
+            next_cover()
+        end)
+    -- a file that never finishes (unreadable, very slow storage) mustn't hold up the rest
+    watchdog = mp.add_timeout(15, function() mp.abort_async_command(id) end)
+end
+
+-- covers <json list of paths>: the ones the menu shows now go first
+local function covers(json)
+    local list = utils.parse_json(json or "")
+    if type(list) ~= "table" then return end
+    trim_covers()
+    local fresh = {}
+    for _, path in ipairs(list) do
+        if type(path) == "string" then
+            local final = cover_path(path)
+            if final and utils.file_info(final) then
+                cover_done(path, final)
+            else
+                fresh[#fresh + 1] = path
+            end
+        end
+    end
+    local queued = {}
+    for _, path in ipairs(fresh) do queued[path] = true end
+    for _, path in ipairs(cover_queue) do
+        if not queued[path] then fresh[#fresh + 1] = path; queued[path] = true end
+    end
+    cover_queue = fresh
+    next_cover()
+end
+
 mp.register_script_message("hover", hover)
 mp.register_script_message("hide", hide)
 mp.register_script_message("prepare", prepare)
+mp.register_script_message("covers", covers)
 mp.register_event("shutdown", function()
     stop_renderer()
     for _, entry in pairs(cache) do os.remove(entry.path) end
