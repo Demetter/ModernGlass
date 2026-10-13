@@ -5,7 +5,7 @@
   <img src="/assets/menu-speed.webp" width="49%" alt="Playback speed menu">
 </p>
 
-Track, playlist, chapter, speed and audio output lists open as glass menus that grow out of the button you pressed. With `modern_menus=no` they open in mpv’s built-in [`select.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/select.lua) lists instead, which ModernGlass also integrates together with [`console.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/console.lua) (mpv **v0.39+**).
+Track, playlist, chapter, speed and audio output lists open as menus above the button that opened them. With `modern_menus=no` they open in mpv’s built-in [`select.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/select.lua) lists instead, which ModernGlass also integrates together with [`console.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/console.lua) (mpv **v0.39+**).
 
 These integrations are accessible through the following interface elements:
 

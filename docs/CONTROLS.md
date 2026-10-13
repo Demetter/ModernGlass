@@ -94,7 +94,7 @@ Below is a list that explains the OSC buttons function depending on how you inte
 
 ### More (⋯)
 
-In the default layout, the less used controls live in the ⋯ menu at the end of the panel.
+In the default layout, the less used controls are in the ⋯ menu at the right end of the panel.
 
 | Action           | Function                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------ |

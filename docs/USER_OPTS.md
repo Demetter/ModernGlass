@@ -135,7 +135,7 @@ watch-later-options-remove=osd-margin-y
 
 ### Glass and panel
 
-These shape the default layout's floating panel and everything drawn in the same material: menus, tooltips, thumbnails and window controls.
+These options apply to the default layout's panel and to the menus, tooltips, thumbnail frame and window controls.
 
 | Option                    | Value   | Description                                                                                                                                      |
 | ------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -143,8 +143,8 @@ These shape the default layout's floating panel and everything drawn in the same
 | glass_opacity             | 30      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
 | glass_border_opacity      | 14      | opacity of the hairline light edge around glass surfaces, in percent                                                                             |
 | glass_shadow              | yes     | soft shadow under glass surfaces                                                                                                                 |
-| glass_blur                | yes     | frost the video behind glass surfaces (needs `vo=gpu-next`; off for rotated video)                                                               |
-| glass_refraction          | yes     | the edges of glass bend the video behind them and catch the light (with `glass_blur`)                                                            |
+| glass_blur                | yes     | blur the video behind glass surfaces (needs `vo=gpu-next`; off for rotated video)                                                               |
+| glass_refraction          | yes     | distort the video near the edges of glass surfaces and add a highlight along the top edge (with `glass_blur`)                                                            |
 | glass_reduce_transparency | no      | accessibility: frosty, nearly opaque glass                                                                                                       |
 | glass_increase_contrast   | no      | accessibility: black glass with a visible border                                                                                                 |
 | reduce_motion             | no      | accessibility: no spring or scale animations (fades stay)                                                                                        |

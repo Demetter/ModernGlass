@@ -224,8 +224,8 @@ local user_opts = {
     glass_opacity = 30,                    -- tint strength in percent, from clear (0) to solid (100); at least 62 when the video behind can't be frosted
     glass_border_opacity = 14,             -- opacity of the hairline light edge around glass surfaces in percent
     glass_shadow = true,                   -- soft shadow under glass surfaces
-    glass_blur = true,                     -- frost the video behind glass surfaces (needs vo=gpu-next)
-    glass_refraction = true,               -- the edges of glass bend the video behind them and catch the light (with glass_blur)
+    glass_blur = true,                     -- blur the video behind glass surfaces (needs vo=gpu-next)
+    glass_refraction = true,               -- distort the video near the edges of glass surfaces and add a highlight along the top edge (with glass_blur)
     glass_reduce_transparency = false,     -- frosty, nearly opaque glass
     glass_increase_contrast = false,       -- black glass with a visible border
     reduce_motion = false,                 -- no spring and scale animations (fades stay)

@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  Frosted, refractive glass controls for <a href="https://mpv.io">mpv</a>, with menus, thumbnails and motion designed as one system.
+  An on-screen controller (OSC) for <a href="https://mpv.io">mpv</a> with translucent glass panels, track menus and seekbar thumbnails.
 </p>
 
 <p align="center">
@@ -28,15 +28,15 @@
 
 <br>
 
-## Highlights
+## Features
 
-- **Real glass.** A GPU shader frosts the video behind every surface, bends it at the edges like a thick lens, catches light along the rim and casts a soft shadow. It is a material, not a blurred rectangle.
-- **Adapts to the picture.** Over bright scenes the glass deepens and the shadow grows, so white controls stay readable on snow, sky or a white frame.
-- **Menus that belong to the interface.** Audio, subtitles, playlist, chapters, speed and audio output open as glass menus that grow out of their button. Submenus slide in place, and hover states settle on a spring.
-- **Seekbar thumbnails built in.** thumbz renders previews in a background mpv and fills in a storyboard of the whole file while you watch. It works with software decoding on any GPU and tone-maps HDR.
-- **One size on every display.** The controls keep the same size from a 1080p monitor to a 5K ultrawide, and follow your system's display scaling.
-- **Accessible.** Reduce transparency, increase contrast and reduce motion are one option each.
-- **Light on the GPU.** The blur works on a 270-row copy of the frame at any resolution, and switches off while the controls are hidden.
+- **Glass panel.** The playback controls sit on a floating panel with rounded corners. With `vo=gpu-next`, a shader blurs the video behind the panel, distorts it slightly near the edges, adds a highlight along the top edge and draws a shadow under the panel.
+- **Brightness adjustment.** Over bright video the panel is darkened and its shadow is made stronger, so white text and icons stay readable.
+- **Menus.** The audio, subtitle, playlist, chapter, speed and audio output lists open as menus above their buttons. The ⋯ button opens a menu with playback speed, chapters, audio output, loop, keep on top, screenshot and statistics.
+- **Thumbnails.** thumbz shows a preview frame above the seekbar while you hover it. Frames are decoded by a separate mpv process in the background and cached for the current file. HDR video is tone-mapped.
+- **Size.** The controls scale with the window up to a maximum size (`vidscale_max`), which is multiplied by the system's display scaling. On large monitors they stay the size they have on a 1080p screen.
+- **Accessibility options.** `glass_reduce_transparency` makes the panels nearly opaque, `glass_increase_contrast` makes them black with a visible border, and `reduce_motion` turns off the spring and scale animations.
+- **GPU use.** The blur is computed on a copy of the frame scaled down to 270 rows, and the shader is turned off while the controls are hidden.
 
 ## Gallery
 
@@ -61,7 +61,7 @@
 
 <p align="center">
   <img src="assets/thumbnails.webp" alt="Seekbar thumbnail preview" width="100%">
-  <br><sub>Seekbar thumbnails with the chapter name</sub>
+  <br><sub>Seekbar thumbnail with the chapter name and time</sub>
 </p>
 
 <table>
@@ -86,7 +86,7 @@
   <tr><td align="center"><sub><code>glass_reduce_transparency=yes</code></sub></td></tr>
 </table>
 
-`reduce_motion=yes` keeps the fades and drops the spring and scale animations.
+`reduce_motion=yes` turns off the spring and scale animations. Fades are kept.
 
 ## Installation
 
@@ -115,14 +115,14 @@
 
 ```ini
 osc=no                        # turn off mpv's own controls
-vo=gpu-next                   # needed for the frosted glass
-video-sync=display-resample   # animations at your display's refresh rate, not the video's
+vo=gpu-next                   # needed for the blur behind the panels
+video-sync=display-resample   # redraw the controls at the display's refresh rate
 ```
 
-That's it. Optionally add `border=no` for a frameless window with glass window controls.
+`border=no` removes the system title bar. The minimize, maximize and close buttons are then drawn by the script in the top right corner.
 
 > [!NOTE]
-> Without `vo=gpu-next` the glass is drawn as tinted panels without the frosted backdrop.
+> With other video outputs the panels are drawn without the blur, at a higher opacity.
 
 ### Upgrading from ModernZ
 
@@ -137,23 +137,23 @@ Put `modernz.conf` in `script-opts`. It lists every option with its default, or 
 glass_opacity=40
 panel_max_width=1400
 
-# controls: blue progress instead of white, file name as the title
+# controls: blue progress bar, file name as the title
 seekbarfg_color=#0A84FF
 title=${filename}
 ```
 
-The glass options at a glance:
+Glass options:
 
 | Option | Default | What it does |
 | --- | --- | --- |
-| `glass_color` | `#17181C` | tint of the glass |
-| `glass_opacity` | `30` | clear (`0`) to solid (`100`) |
-| `glass_blur` | `yes` | frost the video behind the glass |
-| `glass_refraction` | `yes` | lens edges and rim light |
-| `glass_shadow` | `yes` | soft adaptive shadow |
+| `glass_color` | `#17181C` | panel color |
+| `glass_opacity` | `30` | panel opacity in percent |
+| `glass_blur` | `yes` | blur the video behind the panels |
+| `glass_refraction` | `yes` | distortion near the edges and a highlight along the top edge |
+| `glass_shadow` | `yes` | shadow under the panels |
 | `panel_radius` | `28` | corner radius of the panel |
 | `panel_max_width` | `0` | widest the panel gets (`0` = full width) |
-| `vidscale_max` | `1.35` | size of the controls on large displays |
+| `vidscale_max` | `1.35` | maximum size of the controls, multiplied by the display scaling |
 
 The full list is in the [options guide](docs/USER_OPTS.md). Other layouts from ModernZ (`classic`, `compact`, `mini`, `seekbar`) are still available with `layout=`.
 
@@ -180,7 +180,7 @@ The [extra scripts](extras/) from ModernZ work with ModernGlass too: Open-File, 
 
 ## Credits
 
-ModernGlass is built on [ModernZ](https://github.com/Samillion/ModernZ) by Samillion, which keeps a long line of mpv interfaces alive:
+ModernGlass is based on [ModernZ](https://github.com/Samillion/ModernZ) by Samillion. Project history:
 
 - [Samillion/ModernZ](https://github.com/Samillion/ModernZ)
   - forked from [dexeonify/ModernX](https://github.com/dexeonify/mpv-config/blob/main/scripts/modernx.lua)
@@ -190,7 +190,7 @@ ModernGlass is built on [ModernZ](https://github.com/Samillion/ModernZ) by Samil
 - [Inter](https://rsms.me/inter/) by Rasmus Andersson, [SIL Open Font License 1.1](fonts/Inter-LICENSE.txt)
 - [Fluent System Icons](https://github.com/microsoft/fluentui-system-icons) by Microsoft ([MIT](https://github.com/microsoft/fluentui-system-icons?tab=MIT-1-ov-file#readme)) and [Material Symbols](https://github.com/google/material-design-icons) by Google ([Apache 2.0](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file#readme))
 
-The scenes in the screenshots are generated and free to reuse.
+The landscapes in the screenshots were generated for this README.
 
 ## License
 
