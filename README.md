@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  An on-screen controller (OSC) for <a href="https://mpv.io">mpv</a> with translucent glass panels, track menus and seekbar thumbnails.
+  A sleek and modern glassmorphic OSC for <a href="https://mpv.io">mpv</a>. This project is a fork of <a href="https://github.com/Samillion/ModernZ">ModernZ</a> that adds translucent glass panels, track menus and seekbar thumbnails while preserving the core standards of mpv's OSC.
 </p>
 
 <p align="center">
