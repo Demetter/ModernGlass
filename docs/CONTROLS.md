@@ -84,6 +84,8 @@ Below is a list that explains the OSC buttons function depending on how you inte
 | Left mouse click  | Show an interactive playlist |
 | Right mouse click | Show an interactive menu     |
 
+When a single file is playing, the playlist shows the other videos in its folder, in order. Picking one makes that folder the playlist. **Other folders** in the title row opens a folder browser: **Up one level** goes to the parent folder, a folder opens it, and a video plays it with its folder as the playlist.
+
 ### Volume
 
 | Action            | Function                      |

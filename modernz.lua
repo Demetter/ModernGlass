@@ -434,6 +434,9 @@ local icon_glyphs = {
     ["menu_chapters"] = "m 5.75 6.5 b 5.75 6.72 5.69 6.93 5.58 7.12 5.47 7.32 5.32 7.47 5.12 7.58 4.93 7.69 4.72 7.75 4.5 7.75 4.28 7.75 4.07 7.69 3.88 7.58 3.68 7.47 3.53 7.32 3.42 7.12 3.31 6.93 3.25 6.72 3.25 6.5 3.25 6.28 3.31 6.07 3.42 5.88 3.53 5.68 3.68 5.53 3.87 5.42 4.07 5.31 4.28 5.25 4.5 5.25 4.72 5.25 4.93 5.31 5.12 5.42 5.32 5.53 5.47 5.68 5.58 5.88 5.69 6.07 5.75 6.28 5.75 6.5 m 5.75 12 b 5.75 12.22 5.69 12.43 5.58 12.62 5.47 12.82 5.32 12.97 5.12 13.08 4.93 13.19 4.72 13.25 4.5 13.25 4.28 13.25 4.07 13.19 3.88 13.08 3.68 12.97 3.53 12.82 3.42 12.62 3.31 12.43 3.25 12.22 3.25 12 3.25 11.78 3.31 11.57 3.42 11.38 3.53 11.18 3.68 11.03 3.87 10.92 4.07 10.81 4.28 10.75 4.5 10.75 4.72 10.75 4.93 10.81 5.12 10.92 5.32 11.03 5.47 11.18 5.58 11.38 5.69 11.57 5.75 11.78 5.75 12 m 5.75 17.5 b 5.75 17.72 5.69 17.93 5.58 18.12 5.47 18.32 5.32 18.47 5.12 18.58 4.93 18.69 4.72 18.75 4.5 18.75 4.28 18.75 4.07 18.69 3.88 18.58 3.68 18.47 3.53 18.32 3.42 18.12 3.31 17.93 3.25 17.72 3.25 17.5 3.25 17.28 3.31 17.07 3.42 16.88 3.53 16.68 3.68 16.53 3.87 16.42 4.07 16.31 4.28 16.25 4.5 16.25 4.72 16.25 4.93 16.31 5.12 16.42 5.32 16.53 5.47 16.68 5.58 16.88 5.69 17.07 5.75 17.28 5.75 17.5 m 9 5.75 l 20 5.75 b 20.13 5.75 20.26 5.78 20.38 5.85 20.49 5.92 20.58 6.01 20.65 6.12 20.72 6.24 20.75 6.37 20.75 6.5 20.75 6.63 20.72 6.76 20.65 6.88 20.58 6.99 20.49 7.08 20.38 7.15 20.26 7.22 20.13 7.25 20 7.25 l 9 7.25 b 8.87 7.25 8.74 7.22 8.62 7.15 8.51 7.08 8.42 6.99 8.35 6.88 8.28 6.76 8.25 6.63 8.25 6.5 8.25 6.37 8.28 6.24 8.35 6.12 8.42 6.01 8.51 5.92 8.62 5.85 8.74 5.78 8.87 5.75 9 5.75 m 9 11.25 l 20 11.25 b 20.13 11.25 20.26 11.28 20.38 11.35 20.49 11.42 20.58 11.51 20.65 11.62 20.72 11.74 20.75 11.87 20.75 12 20.75 12.13 20.72 12.26 20.65 12.38 20.58 12.49 20.49 12.58 20.38 12.65 20.26 12.72 20.13 12.75 20 12.75 l 9 12.75 b 8.87 12.75 8.74 12.72 8.62 12.65 8.51 12.58 8.42 12.49 8.35 12.38 8.28 12.26 8.25 12.13 8.25 12 8.25 11.87 8.28 11.74 8.35 11.62 8.42 11.51 8.51 11.42 8.62 11.35 8.74 11.28 8.87 11.25 9 11.25 m 9 16.75 l 20 16.75 b 20.13 16.75 20.26 16.78 20.38 16.85 20.49 16.92 20.58 17.01 20.65 17.12 20.72 17.24 20.75 17.37 20.75 17.5 20.75 17.63 20.72 17.76 20.65 17.88 20.58 17.99 20.49 18.08 20.38 18.15 20.26 18.22 20.13 18.25 20 18.25 l 9 18.25 b 8.87 18.25 8.74 18.22 8.62 18.15 8.51 18.08 8.42 17.99 8.35 17.88 8.28 17.76 8.25 17.63 8.25 17.5 8.25 17.37 8.28 17.24 8.35 17.12 8.42 17.01 8.51 16.92 8.62 16.85 8.74 16.78 8.87 16.75 9 16.75",
     ["menu_check"] = "m 4.53 12.97 b 4.24 12.68 3.76 12.68 3.47 12.97 3.18 13.26 3.18 13.74 3.47 14.03 l 7.97 18.53 b 8.26 18.82 8.74 18.82 9.03 18.53 l 20.03 7.53 b 20.32 7.24 20.32 6.76 20.03 6.47 19.74 6.18 19.26 6.18 18.97 6.47 l 8.5 16.94 4.53 12.97",
     ["menu_chevron"] = "m 8.47 4.22 b 8.38 4.31 8.31 4.43 8.28 4.56 8.24 4.68 8.24 4.82 8.28 4.94 8.31 5.07 8.38 5.19 8.47 5.28 l 15.19 12 8.47 18.72 b 8.39 18.8 8.32 18.9 8.28 19 8.24 19.11 8.22 19.23 8.23 19.34 8.25 19.46 8.28 19.57 8.34 19.66 8.41 19.76 8.49 19.84 8.59 19.91 8.68 19.97 8.79 20 8.91 20.02 9.02 20.03 9.14 20.01 9.25 19.97 9.35 19.93 9.45 19.86 9.53 19.78 l 16.78 12.53 b 16.87 12.44 16.94 12.32 16.97 12.19 17.01 12.07 17.01 11.93 16.97 11.81 16.94 11.68 16.87 11.56 16.78 11.47 l 9.53 4.22 b 9.44 4.13 9.32 4.06 9.19 4.03 9.07 3.99 8.93 3.99 8.81 4.03 8.68 4.06 8.56 4.13 8.47 4.22",
+    ["menu_folder"] = "m 3.5 6.25 l 3.5 8 8.13 8 b 8.33 8 8.52 7.92 8.66 7.78 l 10.19 6.25 8.66 4.72 b 8.52 4.58 8.33 4.5 8.13 4.5 l 5.25 4.5 b 4.28 4.5 3.5 5.28 3.5 6.25 m 2 6.25 b 2 4.46 3.46 3 5.25 3 l 8.13 3 b 8.73 3 9.3 3.24 9.72 3.66 l 11.56 5.5 18.75 5.5 b 20.54 5.5 22 6.96 22 8.75 l 22 17.75 b 22 19.54 20.54 21 18.75 21 l 5.25 21 b 3.46 21 2 19.54 2 17.75 l 2 6.25 m 3.5 9.5 l 3.5 17.75 b 3.5 18.72 4.28 19.5 5.25 19.5 l 18.75 19.5 b 19.72 19.5 20.5 18.72 20.5 17.75 l 20.5 8.75 b 20.5 7.78 19.72 7 18.75 7 l 11.56 7 9.72 8.84 b 9.3 9.26 8.73 9.5 8.13 9.5 l 3.5 9.5",
+    ["menu_folder_up"] = "m 3.5 6.25 l 3.5 8 8.13 8 b 8.33 8 8.52 7.92 8.66 7.78 l 10.19 6.25 8.66 4.72 b 8.52 4.58 8.33 4.5 8.13 4.5 l 5.25 4.5 b 4.28 4.5 3.5 5.28 3.5 6.25 m 2 6.25 b 2 4.46 3.46 3 5.25 3 l 8.13 3 b 8.73 3 9.3 3.24 9.72 3.66 l 11.56 5.5 18.75 5.5 b 20.54 5.5 22 6.96 22 8.75 l 22 12.81 b 21.56 12.38 21.05 12.02 20.5 11.73 l 20.5 8.75 b 20.5 7.78 19.72 7 18.75 7 l 11.56 7 9.72 8.84 b 9.3 9.26 8.73 9.5 8.13 9.5 l 3.5 9.5 3.5 17.75 b 3.5 18.72 4.28 19.5 5.25 19.5 l 11.31 19.5 b 11.49 20.03 11.73 20.54 12.02 21 l 5.25 21 b 3.46 21 2 19.54 2 17.75 l 2 6.25 m 23 17.5 b 23 20.54 20.54 23 17.5 23 14.46 23 12 20.54 12 17.5 12 14.46 14.46 12 17.5 12 20.54 12 23 14.46 23 17.5 m 17 20.5 b 17 20.78 17.22 21 17.5 21 17.78 21 18 20.78 18 20.5 l 18 15.71 19.65 17.35 b 19.84 17.55 20.16 17.55 20.35 17.35 20.55 17.16 20.55 16.84 20.35 16.65 l 17.85 14.15 b 17.66 13.95 17.34 13.95 17.15 14.15 l 14.65 16.65 b 14.45 16.84 14.45 17.16 14.65 17.35 14.84 17.55 15.16 17.55 15.35 17.35 l 17 15.71 17 20.5",
+    ["menu_video"] = "m 2 6.25 b 2 4.46 3.46 3 5.25 3 l 18.75 3 b 20.54 3 22 4.46 22 6.25 l 22 17.75 b 22 19.54 20.54 21 18.75 21 l 5.25 21 b 3.46 21 2 19.54 2 17.75 l 2 6.25 m 5.25 4.5 b 4.28 4.5 3.5 5.28 3.5 6.25 l 3.5 17.75 b 3.5 18.72 4.28 19.5 5.25 19.5 l 18.75 19.5 b 19.72 19.5 20.5 18.72 20.5 17.75 l 20.5 6.25 b 20.5 5.28 19.72 4.5 18.75 4.5 l 5.25 4.5 m 9 9.25 l 9 14.75 b 9 15.51 9.82 15.99 10.48 15.63 l 15.48 12.88 b 16.17 12.5 16.17 11.5 15.48 11.12 l 10.48 8.37 b 9.82 8.01 9 8.49 9 9.25",
     ["menu_more"] = "m 7.5 12 b 7.5 12.31 7.42 12.61 7.27 12.88 7.11 13.14 6.89 13.36 6.62 13.52 6.36 13.67 6.06 13.75 5.75 13.75 5.44 13.75 5.14 13.67 4.88 13.52 4.61 13.36 4.39 13.14 4.23 12.88 4.08 12.61 4 12.31 4 12 4 11.69 4.08 11.39 4.23 11.12 4.39 10.86 4.61 10.64 4.87 10.48 5.14 10.33 5.44 10.25 5.75 10.25 6.06 10.25 6.36 10.33 6.62 10.48 6.89 10.64 7.11 10.86 7.27 11.12 7.42 11.39 7.5 11.69 7.5 12 m 13.75 12 b 13.75 12.31 13.67 12.61 13.52 12.88 13.36 13.14 13.14 13.36 12.88 13.52 12.61 13.67 12.31 13.75 12 13.75 11.69 13.75 11.39 13.67 11.12 13.52 10.86 13.36 10.64 13.14 10.48 12.88 10.33 12.61 10.25 12.31 10.25 12 10.25 11.69 10.33 11.39 10.48 11.12 10.64 10.86 10.86 10.64 11.12 10.48 11.39 10.33 11.69 10.25 12 10.25 12.31 10.25 12.61 10.33 12.88 10.48 13.14 10.64 13.36 10.86 13.52 11.12 13.67 11.39 13.75 11.69 13.75 12 m 20 12 b 20 12.31 19.92 12.61 19.77 12.88 19.61 13.14 19.39 13.36 19.12 13.52 18.86 13.67 18.56 13.75 18.25 13.75 17.94 13.75 17.64 13.67 17.38 13.52 17.11 13.36 16.89 13.14 16.73 12.88 16.58 12.61 16.5 12.31 16.5 12 16.5 11.69 16.58 11.39 16.73 11.12 16.89 10.86 17.11 10.64 17.38 10.48 17.64 10.33 17.94 10.25 18.25 10.25 18.56 10.25 18.86 10.33 19.12 10.48 19.39 10.64 19.61 10.86 19.77 11.12 19.92 11.39 20 11.69 20 12",
     ["more_vert"] = "m 12 20 b 11.45 20 10.98 19.8 10.59 19.41 10.2 19.02 10 18.55 10 18 10 17.45 10.2 16.98 10.59 16.59 10.98 16.2 11.45 16 12 16 12.55 16 13.02 16.2 13.41 16.59 13.8 16.98 14 17.45 14 18 14 18.55 13.8 19.02 13.41 19.41 13.02 19.8 12.55 20 12 20 m 12 14 b 11.45 14 10.98 13.8 10.59 13.41 10.2 13.02 10 12.55 10 12 10 11.45 10.2 10.98 10.59 10.59 10.98 10.2 11.45 10 12 10 12.55 10 13.02 10.2 13.41 10.59 13.8 10.98 14 11.45 14 12 14 12.55 13.8 13.02 13.41 13.41 13.02 13.8 12.55 14 12 14 m 12 8 b 11.45 8 10.98 7.8 10.59 7.41 10.2 7.02 10 6.55 10 6 10 5.45 10.2 4.98 10.59 4.59 10.98 4.2 11.45 4 12 4 12.55 4 13.02 4.2 13.41 4.59 13.8 4.98 14 5.45 14 6 14 6.55 13.8 7.02 13.41 7.41 13.02 7.8 12.55 8 12 8",
     ["no_sound"] = "m 18 13.4 l 16.1 15.3 b 15.92 15.48 15.68 15.57 15.4 15.57 15.12 15.57 14.88 15.48 14.7 15.3 14.52 15.12 14.43 14.88 14.43 14.6 14.43 14.32 14.52 14.08 14.7 13.9 l 16.6 12 14.7 10.1 b 14.52 9.92 14.43 9.68 14.43 9.4 14.43 9.12 14.52 8.88 14.7 8.7 14.88 8.52 15.12 8.42 15.4 8.42 15.68 8.42 15.92 8.52 16.1 8.7 l 18 10.6 19.9 8.7 b 20.08 8.52 20.32 8.42 20.6 8.42 20.88 8.42 21.12 8.52 21.3 8.7 21.48 8.88 21.58 9.12 21.58 9.4 21.58 9.68 21.48 9.92 21.3 10.1 l 19.4 12 21.3 13.9 b 21.48 14.08 21.58 14.32 21.58 14.6 21.58 14.88 21.48 15.12 21.3 15.3 21.12 15.48 20.88 15.57 20.6 15.57 20.32 15.57 20.08 15.48 19.9 15.3 l 18 13.4 m 7 15 l 4 15 b 3.72 15 3.48 14.9 3.29 14.71 3.1 14.52 3 14.28 3 14 l 3 10 b 3 9.72 3.1 9.48 3.29 9.29 3.48 9.1 3.72 9 4 9 l 7 9 10.3 5.7 b 10.62 5.38 10.98 5.31 11.39 5.49 11.8 5.66 12 5.98 12 6.43 l 12 17.57 b 12 18.02 11.8 18.34 11.39 18.51 10.98 18.69 10.62 18.62 10.3 18.3 l 7 15 m 10 8.85 l 7.85 11 5 11 5 13 7.85 13 10 15.15 10 8.85",
@@ -636,6 +639,9 @@ local icon_names = {
     ["menu_chapters"] = "menu_chapters",
     ["menu_check"] = "menu_check",
     ["menu_chevron"] = "menu_chevron",
+    ["menu_folder"] = "menu_folder",
+    ["menu_folder_up"] = "menu_folder_up",
+    ["menu_video"] = "menu_video",
     ["menu_more"] = "menu_more",
     ["window_close"] = "window_close",
     ["window_maximize"] = "window_maximize",
@@ -805,6 +811,11 @@ local language = {
         default_track = "Default",
         forced = "Forced",
         external = "External",
+        other_folders = "Other folders",
+        browse_folders = "Browse folders",
+        up_one_level = "Up one level",
+        nothing_here = "Nothing to play here",
+        playing = "Playing",
     },
 }
 
@@ -3023,9 +3034,121 @@ end
 
 local SPEEDS = {0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2}
 
--- title, items; an item: {label, meta, active, action, icon, submenu, sep (line above)}
-local function menu_items(kind)
-    local items, title = {}, nil
+-- Folders: the videos next to the playing file, and a browser for other folders
+local function ext_set(list)
+    local set = {}
+    for ext in list:gmatch("%w+") do set[ext] = true end
+    return set
+end
+local MEDIA_EXTS = {
+    video = ext_set("mkv mp4 m4v avi mov webm wmv flv ts m2ts mts mpg mpeg vob ogv 3gp rmvb asf f4v divx y4m"),
+    audio = ext_set("mp3 flac m4a aac ogg oga opus wav wv ape aiff aif wma mka dsf dff"),
+    image = ext_set("jpg jpeg png webp gif bmp tif tiff avif heic heif jxl"),
+}
+
+local function ext_of(name)
+    return (name:match("%.([^%.]+)$") or ""):lower()
+end
+
+-- "Episode 2" before "Episode 10": runs of digits compare as numbers
+local function natural_sort(names)
+    local keys = {}
+    for _, n in ipairs(names) do
+        keys[n] = n:lower():gsub("%d+", function(d) return ("0"):rep(math.max(0, 12 - #d)) .. d end)
+    end
+    table.sort(names, function(a, b)
+        if keys[a] ~= keys[b] then return keys[a] < keys[b] end
+        return a < b
+    end)
+    return names
+end
+
+local function same_path(a, b)
+    local function norm(p)
+        p = p:gsub("\\", "/"):gsub("/+", "/")
+        return platform == "windows" and p:lower() or p
+    end
+    return norm(a) == norm(b)
+end
+
+-- the playing file as an absolute local path, with its folder; nil for streams
+local function current_file()
+    local path = mp.get_property("path")
+    if not path or path:find("^%a[%w+.-]*://") then return nil end
+    path = utils.join_path(mp.get_property("working-directory", ""), path)
+    local dir = utils.split_path(path)
+    return path, dir
+end
+
+-- folders list files like the playing one: videos, music or pictures
+local function media_kind()
+    local path = current_file()
+    local ext = path and ext_of(path) or ""
+    if MEDIA_EXTS.audio[ext] then return "audio" end
+    if MEDIA_EXTS.image[ext] then return "image" end
+    return "video"
+end
+
+local function dir_name(dir)
+    local trimmed = dir:gsub("[/\\]+$", "")
+    return trimmed:match("[^/\\]+$") or dir
+end
+
+local function parent_dir(dir)
+    local trimmed = dir:gsub("[/\\]+$", "")
+    if trimmed == "" or trimmed:match("^%a:$") then return nil end  -- "/" or a drive
+    local parent = utils.split_path(trimmed)
+    if parent == "" or parent == "./" or same_path(parent, dir) then return nil end
+    return parent
+end
+
+local function list_media(dir, kind)
+    local exts = MEDIA_EXTS[kind]
+    local out = {}
+    for _, f in ipairs(utils.readdir(dir, "files") or {}) do
+        if f:sub(1, 1) ~= "." and exts[ext_of(f)] then out[#out + 1] = f end
+    end
+    return natural_sort(out)
+end
+
+local function list_folders(dir)
+    local out = {}
+    for _, d in ipairs(utils.readdir(dir, "dirs") or {}) do
+        if not d:find("^[.$]") and d ~= "System Volume Information" then out[#out + 1] = d end
+    end
+    return natural_sort(out)
+end
+
+-- make the folder the playlist, in order, and play one of its files (the playing
+-- file keeps playing when it is the one picked)
+local function play_folder(dir, files, index)
+    local target = utils.join_path(dir, files[index])
+    local path = current_file()
+    if path and same_path(path, target) then
+        mp.commandv("playlist-clear")
+    else
+        mp.commandv("loadfile", target, "replace")
+    end
+    for i = 1, index - 1 do
+        mp.commandv("loadfile", utils.join_path(dir, files[i]), "insert-at", tostring(i - 1))
+    end
+    for i = index + 1, #files do
+        mp.commandv("loadfile", utils.join_path(dir, files[i]), "append")
+    end
+end
+
+local function strip_ext(name)
+    return (name:gsub("%.[%w]+$", ""))
+end
+
+-- title, items, header; an item: {label, meta, active, action, icon, submenu, arg (for
+-- the submenu), sep (line above)}; header: a link on the title row {label, submenu, arg}
+local function menu_items(kind, arg)
+    local items, title, header = {}, nil, nil
+    local path, dir = current_file()
+    if kind == "playlist" and dir and (state.playlist_count or 0) <= 1 then
+        kind, arg = "folder", dir  -- a single file: the videos in its folder
+    end
     if kind == "audio" or kind == "sub" then
         title = kind == "audio" and locale.audio or locale.subtitles
         if kind == "sub" then
@@ -3053,14 +3176,56 @@ local function menu_items(kind)
         end
     elseif kind == "playlist" then
         title = locale.playlist
-        for i, entry in ipairs(mp.get_property_native("playlist") or {}) do
+        local entries = mp.get_property_native("playlist") or {}
+        local one_dir = dir ~= nil
+        local cwd = mp.get_property("working-directory", "")
+        for i, entry in ipairs(entries) do
             local name = entry.title
             if not name or name == "" then
                 name = (entry.filename or ""):gsub("[/\\]+$", ""):match("[^/\\]+$") or entry.filename or ""
-                if not name:find("^%a+://") then name = name:gsub("%.[%w]+$", "") end
+                if not name:find("^%a+://") then name = strip_ext(name) end
+            end
+            -- a playlist of one folder is titled with the folder's name
+            if one_dir then
+                local f = utils.join_path(cwd, entry.filename or "")
+                one_dir = not f:find("^%a[%w+.-]*://") and same_path(utils.split_path(f), dir)
             end
             items[#items + 1] = {label = name, meta = tostring(i), active = entry.current or entry.playing,
                 action = function() mp.commandv("playlist-play-index", tostring(i - 1)) end}
+        end
+        if one_dir then title = dir_name(dir) end
+        if dir then header = {label = locale.browse_folders, submenu = "browse", arg = dir} end
+    elseif kind == "folder" then
+        -- the videos in the playing file's folder, in order
+        title = dir_name(arg)
+        local files = list_media(arg, media_kind())
+        for i, f in ipairs(files) do
+            items[#items + 1] = {label = strip_ext(f), meta = tostring(i),
+                active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+                action = function() play_folder(arg, files, i) end}
+        end
+        local up = parent_dir(arg)
+        if up then header = {label = locale.other_folders, submenu = "browse", arg = up} end
+    elseif kind == "browse" then
+        -- a folder: up a level, its folders, then its videos
+        title = dir_name(arg)
+        local up = parent_dir(arg)
+        if up then
+            items[#items + 1] = {icon = "menu_folder_up", label = locale.up_one_level, submenu = "browse", arg = up}
+        end
+        for _, d in ipairs(list_folders(arg)) do
+            local sub = utils.join_path(arg, d)
+            items[#items + 1] = {icon = "menu_folder", label = d, submenu = "browse", arg = sub,
+                meta = dir and same_path(sub, (dir:gsub("[/\\]+$", ""))) and locale.playing or nil}
+        end
+        local files = list_media(arg, media_kind())
+        for i, f in ipairs(files) do
+            items[#items + 1] = {icon = "menu_video", label = strip_ext(f), sep = i == 1 and #items > 0,
+                active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+                action = function() play_folder(arg, files, i) end}
+        end
+        if #items == 0 then
+            items[1] = {label = locale.nothing_here}
         end
     elseif kind == "chapter" then
         title = locale.chapters
@@ -3129,20 +3294,27 @@ local function menu_items(kind)
                     action = function() mp.command(user_opts.info_mbtn_left_command) end})
         end
     end
-    return title, items
+    return title, items, header
 end
 
 
 local function menu_activate(index)
     if not menu then return end
     if index == 0 and menu.back then
-        open_menu(menu.back, menu.anchor, {from_back = true})
+        -- back to the view this one was opened from, where it was scrolled to
+        local stack = {}
+        for i = 1, #menu.stack - 1 do stack[i] = menu.stack[i] end
+        local prev = menu.stack[#menu.stack]
+        open_menu(prev.kind, menu.anchor, {from_back = true, arg = prev.arg, scroll = prev.scroll, stack = stack})
         return
     end
-    local item = menu.items[index]
+    local item = index == 0 and menu.header or menu.items[index]
     if not item then return end
     if item.submenu then
-        open_menu(item.submenu, menu.anchor, {back = menu.kind})
+        local stack = {}
+        for i, v in ipairs(menu.stack) do stack[i] = v end
+        stack[#stack + 1] = {kind = menu.kind, arg = menu.arg, scroll = menu.scroll}
+        open_menu(item.submenu, menu.anchor, {back = true, arg = item.arg, stack = stack})
         return
     end
     close_menu()
@@ -3151,7 +3323,7 @@ end
 
 local function menu_move(step)
     if not menu then return end
-    local first = menu.back and 0 or 1
+    local first = (menu.back or menu.header) and 0 or 1
     local i = (menu.hover or (step > 0 and first - 1 or #menu.items + 1)) + step
     menu.hover = math.max(first, math.min(#menu.items, i))
     menu.keyboard = true
@@ -3212,36 +3384,61 @@ open_menu = function(kind, anchor_name, opts)
         close_menu()
         return
     end
-    local title, items = menu_items(kind)
+    local title, items, header = menu_items(kind, opts.arg)
     if #items == 0 then
         mp.osd_message(kind == "sub" and locale.no_subs or kind == "audio" and locale.no_audio or locale.na)
         return
     end
-    local back = opts.back
-    if opts.from_back and menu then back = nil end
+    -- the views it was opened from (each a kind, arg and scroll), for the back row
+    local stack = opts.stack or {}
     local had_menu = menu ~= nil
     local origin = menu and menu.geo
     if menu then menu = nil else menu_keys(true) end
     menu_closing = nil
     local active, icons_mode = 1, false
     for i, item in ipairs(items) do
+        item.raw = item.label
         item.label = esc(item.label)
         item.meta = (item.meta and item.meta ~= "") and esc(item.meta) or nil
         if item.active and active == 1 then active = i end
         if item.icon then icons_mode = true end
     end
     state.menu_open = true
-    menu = {kind = kind, title = title and esc(title) or nil, items = items, anchor = anchor_name,
-            back = back, icons = icons_mode, hover = nil, t0 = mp.get_time(),
+    if header then header.label = esc(header.label) end
+    menu = {kind = kind, arg = opts.arg, stack = stack, title = title and esc(title) or nil, items = items,
+            header = #stack == 0 and header or nil,
+            anchor = anchor_name, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
             -- going into a submenu or back: the card reshapes from the old one in place and
             -- the new rows slide in from the side they come from
             keep_x = had_menu and origin and origin.x or nil,
             from = had_menu and origin and {x = origin.x, y = origin.y, w = origin.w, h = origin.h} or nil,
             dir = opts.back and 1 or -1}
     local rows = math.min(#items, math.max(3, user_opts.menu_max_items))
-    menu.scroll = math.max(0, math.min(#items - rows, active - math.ceil(rows / 2)))
+    menu.scroll = opts.scroll or math.max(0, math.min(#items - rows, active - math.ceil(rows / 2)))
     state.showtime = mp.get_time()
     request_tick()
+end
+
+-- a label that fits the row, shortened with an ellipsis when it doesn't
+local function fit_label(item, avail, style)
+    if item.fit_w == avail then return item.fit end
+    item.fit_w = avail
+    item.fit = item.label
+    if not item.raw or estimate_text_width(item.label, style) <= avail then return item.fit end
+    local starts = {}
+    for p in item.raw:gmatch("()[^\128-\191]") do starts[#starts + 1] = p end
+    local lo, hi = 1, #starts
+    item.fit = esc("…")
+    while lo <= hi do
+        local mid = math.floor((lo + hi) / 2)
+        local cut = esc((item.raw:sub(1, starts[mid] - 1):gsub("[%s%.%-_]+$", "")) .. "…")
+        if estimate_text_width(cut, style) <= avail then
+            item.fit, lo = cut, mid + 1
+        else
+            hi = mid - 1
+        end
+    end
+    return item.fit
 end
 
 local function menu_styles()
@@ -3265,7 +3462,23 @@ local function menu_geometry(m)
     local fs_label = "{\\fs" .. MENU.fs .. "}"
     local fs_meta = "{\\fs" .. MENU.meta_fs .. "}"
     local widest = m.title and (estimate_text_width(m.title, st.title .. "{\\fs" .. MENU.title_fs .. "}") + (m.back and 24 or 0)) or 0
-    for _, item in ipairs(m.items) do
+    if m.header then
+        widest = widest + estimate_text_width(m.header.label, st.meta .. "{\\fs" .. MENU.meta_fs .. "}") + 40
+    end
+    -- a long list (a big folder) is sized by its longest entries only: measuring text
+    -- waits on mpv, and hundreds of measurements would hold up opening the menu
+    local sized = m.items
+    if #sized > 16 then
+        if not m.longest then
+            local order = {}
+            for i = 1, #sized do order[i] = sized[i] end
+            table.sort(order, function(a, b) return #a.label + #(a.meta or "") > #b.label + #(b.meta or "") end)
+            m.longest = {}
+            for j = 1, math.min(12, #order) do m.longest[j] = order[j] end
+        end
+        sized = m.longest
+    end
+    for _, item in ipairs(sized) do
         local w = estimate_text_width(item.label, st.label .. fs_label)
             + (item.meta and (estimate_text_width(item.meta, st.meta .. fs_meta) + 20) or 0)
             + (item.submenu and 18 or 0) + (m.icons and item.active ~= nil and 22 or 0)
@@ -3314,7 +3527,7 @@ end
 local function menu_row_at(mx, my)
     local g = menu and menu.geo
     if not g or not mx or mx < g.x or mx > g.x + g.w then return nil end
-    if menu.back and my >= g.y and my < g.top then return 0 end
+    if (menu.back or menu.header) and my >= g.y and my < g.top then return 0 end
     for r = 1, g.rows do
         local y = g.top + g.ys[r]
         if my >= y and my < y + MENU.row_h then
@@ -3427,6 +3640,14 @@ render_menu = function(master_ass, m)
             glyph("menu_back", inner_x + 13, cy, 14, 0x30)
             text(inner_x + 26, cy, 4, st.heading, MENU.fs, menu.title, 0)
         else
+            if menu.header then
+                -- a link on the right of the title row (another folder, ...)
+                if menu.hover == 0 then highlight(g.y + MENU.pad, MENU.header_h - MENU.pad, menu.pressed == 0) end
+                local muted = osc_color_convert(user_opts.muted_text_color)
+                local lx = inner_x + inner_w - 10
+                glyph("menu_chevron", lx - 4, cy, 12, menu.hover == 0 and 0 or 0x30, muted)
+                text(lx - 16, cy, 6, st.meta, MENU.meta_fs, menu.header.label, menu.hover == 0 and 0 or 0x20)
+            end
             text(g.x + 16, cy, 4, st.title, MENU.title_fs, menu.title, 0)
         end
     end
@@ -3473,7 +3694,8 @@ render_menu = function(master_ass, m)
         local meta_w = item.meta and estimate_text_width(item.meta, st.meta .. "{\\fs" .. MENU.meta_fs .. "}") or 0
         if item.meta then text(trail, cy, 6, st.meta, MENU.meta_fs, item.meta, edge) end
         local label_right = trail - (item.meta and meta_w + 14 or 0)
-        text(label_x, cy, 4, st.label, MENU.fs, item.label, edge,
+        local label = fit_label(item, label_right - label_x, st.label .. "{\\fs" .. MENU.fs .. "}")
+        text(label_x, cy, 4, st.label, MENU.fs, label, edge,
              clip_rect(XC(label_x - 2), Y(ry), XC(label_right), Y(ry + MENU.row_h)))
     end
 

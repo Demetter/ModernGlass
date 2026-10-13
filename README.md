@@ -34,6 +34,7 @@
 - **Glass panel.** The playback controls sit on a floating panel with rounded corners. With `vo=gpu-next`, a shader blurs the video behind the panel, distorts it slightly near the edges, adds a highlight along the top edge and draws a shadow under the panel.
 - **Brightness adjustment.** Over bright video the panel is darkened and its shadow is made stronger, so white text and icons stay readable.
 - **Menus.** The audio, subtitle, playlist, chapter, speed and audio output lists open as menus above their buttons. The ⋯ button opens a menu with playback speed, chapters, audio output, loop, keep on top, screenshot and statistics.
+- **Folder playlist.** When a single file is playing, the playlist button lists the other videos in its folder in order, with Episode 10 after Episode 9. Picking one makes that folder the playlist, so the next and previous buttons and the end of an episode follow the folder. **Other folders** in the list's title row opens a browser for picking videos from any other folder.
 - **Thumbz.** A seekbar thumbnailer written for ModernGlass that shows a preview frame above the seekbar while you hover it. See [Thumbz](#thumbz) for how it works and how it compares to Thumbfast.
 - **Size.** The controls scale with the window up to a maximum size (`vidscale_max`), which is multiplied by the system's display scaling. On large monitors they stay the size they have on a 1080p screen.
 - **Accessibility options.** `glass_reduce_transparency` makes the panels nearly opaque, `glass_increase_contrast` makes them black with a visible border, and `reduce_motion` turns off the spring and scale animations.
@@ -57,6 +58,14 @@
   <tr>
     <td align="center"><sub>Playback speed, from the ⋯ menu</sub></td>
     <td align="center"><sub>Playlist, over a bright scene</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/menu-folder.webp" alt="The other videos in the playing file's folder"></td>
+    <td width="50%"><img src="assets/menu-folders.webp" alt="Folder browser"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Videos in the same folder</sub></td>
+    <td align="center"><sub>Other folders</sub></td>
   </tr>
 </table>
 
