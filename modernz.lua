@@ -3145,8 +3145,9 @@ end
 -- Covers: a small still beside each video in the folder and playlist menus. thumbz makes
 -- them (once per file, kept on disk); they're shown with overlay-add, since ASS can't
 -- draw pictures, while the menu stands still, over a tile that moves with the menu.
-local COVER_W, COVER_H, COVER_R = 48, 27, 4.2   -- in layout units (the pictures are 160x90)
-local COVER_ROW_H = 40
+local COVER_W, COVER_H, COVER_R = 60, 33.75, 6  -- in layout units (the pictures are 160x90)
+local COVER_X, COVER_GAP = 6, 12                -- inset from the row's edge, gap to the name
+local COVER_ROW_H = 46
 local COVER_SLOT0, COVER_SLOTS = 50, 14         -- overlay ids (thumbz's seekbar one is 42)
 local cover_files = {}                          -- path -> picture, or false (none possible)
 local cover_asked = {}
@@ -3233,8 +3234,11 @@ local function menu_items(kind, arg)
             end
             local file = entry.filename and not entry.filename:find("^%a[%w+.-]*://")
                 and utils.join_path(cwd, entry.filename) or nil
-            items[#items + 1] = {label = name, meta = tostring(i), active = entry.current or entry.playing,
-                cover = with_covers and file or nil,
+            local active = entry.current or entry.playing
+            -- beside thumbnails, the playing one says so instead of numbers and a check
+            local meta = tostring(i)
+            if with_covers and file then meta = active and locale.playing or nil end
+            items[#items + 1] = {label = name, active = active, cover = with_covers and file or nil, meta = meta,
                 action = function() mp.commandv("playlist-play-index", tostring(i - 1)) end}
         end
         if one_dir then title = dir_name(dir) end
@@ -3244,8 +3248,10 @@ local function menu_items(kind, arg)
         title = dir_name(arg)
         local files = list_media(arg, media_kind())
         for i, f in ipairs(files) do
-            items[#items + 1] = {label = strip_ext(f), meta = tostring(i),
-                active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+            local active = path ~= nil and same_path(path, utils.join_path(arg, f))
+            local meta = tostring(i)
+            if with_covers then meta = active and locale.playing or nil end
+            items[#items + 1] = {label = strip_ext(f), active = active, meta = meta,
                 cover = with_covers and utils.join_path(arg, f) or nil,
                 action = function() play_folder(arg, files, i) end}
         end
@@ -3265,8 +3271,9 @@ local function menu_items(kind, arg)
         end
         local files = list_media(arg, media_kind())
         for i, f in ipairs(files) do
+            local active = path ~= nil and same_path(path, utils.join_path(arg, f))
             items[#items + 1] = {icon = not with_covers and "menu_video" or nil, label = strip_ext(f), sep = i == 1 and #items > 0,
-                active = path ~= nil and same_path(path, utils.join_path(arg, f)),
+                active = active, meta = with_covers and active and locale.playing or nil,
                 cover = with_covers and utils.join_path(arg, f) or nil,
                 action = function() play_folder(arg, files, i) end}
         end
@@ -3531,10 +3538,10 @@ local function menu_geometry(m)
     for _, item in ipairs(sized) do
         local w = estimate_text_width(item.label, st.label .. fs_label)
             + (item.meta and (estimate_text_width(item.meta, st.meta .. fs_meta) + 20) or 0)
-            + (item.submenu and 18 or 0) + (m.icons and item.active ~= nil and 22 or 0)
+            + (item.submenu and 18 or 0) + (m.icons and not m.covers and item.active ~= nil and 22 or 0)
         if w > widest then widest = w end
     end
-    local lead = m.covers and 68 or m.icons and 40 or 32
+    local lead = m.covers and (COVER_X + COVER_W + COVER_GAP + 2) or m.icons and 40 or 32
     local w = math.floor(math.max(200, math.min(widest + lead + 2 * MENU.pad + 18, math.min(440, W - 24))))
 
     local ax, ay = W / 2, H - 120
@@ -3723,22 +3730,25 @@ render_menu = function(master_ass, m)
 
         -- rows next to the edge of a scrolled list fade out
         local edge = 0
-        if g.scrolls then
+        -- (rows with pictures stay solid: the pictures can't fade with them)
+        if g.scrolls and not menu.covers then
             if menu.scroll > 0 and r <= 2 then edge = r == 1 and 0x99 or 0x44 end
             if menu.scroll + g.rows < #menu.items and r > g.rows - 2 then edge = math.max(edge, r == g.rows and 0x99 or 0x44) end
         end
 
-        local label_x = inner_x + (menu.covers and 66 or menu.icons and 38 or 30)
+        local label_x = inner_x + (menu.covers and (COVER_X + COVER_W + COVER_GAP) or menu.icons and 38 or 30)
         local trail = right
         if item.cover then
             -- the tile moves with the menu; the picture goes on top once it stands still
-            local tx, ty = inner_x + 8, cy - COVER_H / 2
+            -- a tile one unit larger than the picture: a placeholder while it loads, then
+            -- the hairline edge around it
+            local tx, ty = inner_x + COVER_X, cy - COVER_H / 2
             ass:new_event()
             ass:append(string.format("{\\rDefault\\an7\\bord0\\shad0\\blur0\\1c&HFFFFFF&\\1a&H%02X&%s}",
-                mult_alpha(mult_alpha(0xEA, edge), cfade), cut_tag))
-            ass:pos(XC(tx), Y(ty))
+                mult_alpha(0xE0, cfade), cut_tag))
+            ass:pos(XC(tx - 1), Y(ty - 1))
             ass:draw_start()
-            ass:round_rect_cw(0, 0, COVER_W * k, COVER_H * k, COVER_R * k)
+            ass:round_rect_cw(0, 0, (COVER_W + 2) * k, (COVER_H + 2) * k, (COVER_R + 1) * k)
             ass:draw_stop()
             local file = cover_files[item.cover]
             if file == nil and not cover_asked[item.cover] then
@@ -3752,8 +3762,8 @@ render_menu = function(master_ass, m)
             end
         end
         if menu.icons then
-            if item.icon then glyph(item.icon, inner_x + (menu.covers and 32 or 18), cy, MENU.icon, edge) end
-            if item.active then
+            if item.icon then glyph(item.icon, inner_x + (menu.covers and (COVER_X + COVER_W / 2) or 18), cy, MENU.icon, edge) end
+            if item.active and not menu.covers then
                 glyph("menu_check", right - 6, cy, MENU.glyph, edge)
                 trail = right - 22
             end

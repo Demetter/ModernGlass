@@ -1189,7 +1189,7 @@ end)
 -- cache folder, so a folder that was opened before shows its covers right away.
 ------------------------------------------------------------------------------
 
-local COVER_W, COVER_H, COVER_R = 160, 90, 14
+local COVER_W, COVER_H, COVER_R = 160, 90, 16
 local COVER_KEEP = 1000           -- covers kept on disk (the oldest go first)
 local cover_dir = nil
 local cover_queue = {}            -- paths waiting, the most recently asked for first
@@ -1209,7 +1209,7 @@ end
 local function cover_path(path)
     local info = utils.file_info(path)
     if not info or not info.is_file then return nil end
-    local key = path .. "|" .. info.size .. "|" .. info.mtime
+    local key = "2|" .. path .. "|" .. info.size .. "|" .. info.mtime  -- "2": the corner radius
     local h1, h2 = 0, 0
     for i = 1, #key do
         local b = key:byte(i)
