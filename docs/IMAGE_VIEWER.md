@@ -1,8 +1,8 @@
-# ModernZ Image Viewer
+# ModernGlass Image Viewer
 
-A minimal layout is automatically applied when viewing images while using ModernZ osc, which also features zoom controls.
+A minimal layout is automatically applied when viewing images while using ModernGlass osc, which also features zoom controls.
 
-![image_mode_modernz](https://github.com/user-attachments/assets/f9e999bc-6b6b-43d8-893c-d361f86db59f)
+![Image viewer](/assets/image-viewer.webp)
 
 ## Zoom Controls
 
@@ -22,7 +22,7 @@ Reset values per viewed file, should be added in top level within `mpv.conf`:
 reset-on-next-file=video-zoom,panscan,video-unscaled,video-rotate,video-align-x,video-align-y
 ```
 
-[Auto profiles](https://mpv.io/manual/master/#conditional-auto-profiles) that apply useful [mpv options](https://mpv.io/manual/master/#options) and [ModernZ options](/docs/USER_OPTS.md) when viewing images:
+[Auto profiles](https://mpv.io/manual/master/#conditional-auto-profiles) that apply useful [mpv options](https://mpv.io/manual/master/#options) and [ModernGlass options](/docs/USER_OPTS.md) when viewing images:
 ```EditorConfig
 [Video]
     profile-cond=p["current-tracks/video"] and not p["current-tracks/video"].image
@@ -31,7 +31,7 @@ reset-on-next-file=video-zoom,panscan,video-unscaled,video-rotate,video-align-x,
     taskbar-progress=yes
 
 [Image]
-    profile-desc=ModernZ osc Image Viewer mode
+    profile-desc=ModernGlass osc Image Viewer mode
     profile-cond=p["current-tracks/video"] and p["current-tracks/video"].image and not p["current-tracks/video"].albumart
     profile-restore=copy-equal
     video-recenter=yes

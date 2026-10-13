@@ -1,8 +1,11 @@
 ## Interactive Menus
 
-https://github.com/user-attachments/assets/51a3549a-7944-48b3-899f-f3a03a8caeaf
+<p>
+  <img src="/assets/menu-audio.webp" width="49%" alt="Audio menu">
+  <img src="/assets/menu-speed.webp" width="49%" alt="Playback speed menu">
+</p>
 
-ModernZ integrates mpv’s built-in [`console.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/console.lua) and [`select.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/select.lua) scripts, available in mpv starting from **v0.39+**.
+Track, playlist, chapter, speed and audio output lists open as glass menus that grow out of the button you pressed. With `modern_menus=no` they open in mpv’s built-in [`select.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/select.lua) lists instead, which ModernGlass also integrates together with [`console.lua`](https://github.com/mpv-player/mpv/blob/master/player/lua/console.lua) (mpv **v0.39+**).
 
 These integrations are accessible through the following interface elements:
 
@@ -27,13 +30,13 @@ To enable context-menu:
   - As an example, here is a modified [menu.conf](https://github.com/Samillion/mpv-conf/blob/master/menu.conf)
   - To not use native OS context-menu, you can add `load-context-menu=yes` to your `mpv.conf`.
 
-#### Context menu list for ModernZ in `menu.conf`:
+#### Context menu list for ModernGlass in `menu.conf`:
 
-You can add or adjust any of the list items to suit your needs from the [[list of ModernZ options](/docs/USER_OPTS.md)] in the context menu.
+You can add or adjust any of the list items to suit your needs from the [[list of ModernGlass options](/docs/USER_OPTS.md)] in the context menu.
 
 ```
 
-&ModernZ			disabled=idle_active
+&ModernGlass			disabled=idle_active
 	&Layout
 		&Default	no-osd change-list script-opts append modernz-layout=default
 		&Compact	no-osd change-list script-opts append modernz-layout=compact

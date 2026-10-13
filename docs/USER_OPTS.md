@@ -1,4 +1,4 @@
-# ModernZ User Options Guide
+# ModernGlass User Options Guide
 
 ### Configuration File Location
 
@@ -12,40 +12,41 @@ Create `modernz.conf` in your mpv script-opts directory:
 
 ### Language and display
 
-| Option                    | Value           | Description                                                                                                                    |
-| ------------------------- | --------------- | ------------------------------------------------------------------------------------------------------------------------------ |
-| language                  | default         | set language (for available options, see: [Translations](https://github.com/Samillion/ModernZ/blob/main/docs/TRANSLATIONS.md)) |
-| layout                    | default         | set layout: `default`, `compact`, `mini`, `seekbar`                                                                            |
-| icon_theme                | fluent          | set icon theme. accepts `fluent` or `material`                                                                                 |
-| icon_style                | mixed           | "mixed", "filled", "outline"                                                                                                   |
-| font                      | mpv-osd-symbols | font for the OSC (default: mpv-osd-symbols or the one set in mpv.conf)                                                         |
-| idlescreen                | yes             | show mpv logo when idle                                                                                                        |
-| window_top_bar            | auto            | show OSC window top bar: `"auto"`, `"yes"`, or `"no"` (borderless/fullscreen)                                                  |
-| showwindowed              | yes             | show OSC when windowed                                                                                                         |
-| showfullscreen            | yes             | show OSC when fullscreen                                                                                                       |
-| showonselect              | no              | show OSC when a select menu is open                                                                                            |
-| showonpause               | yes             | show OSC when paused                                                                                                           |
-| keeponpause               | no              | keep OSC visible while paused: `"no"`, `"bottombar"`, `"both"`                                                                 |
-| greenandgrumpy            | no              | disable Santa hat in December                                                                                                  |
+| Option         | Value   | Description                                                                                  |
+| -------------- | ------- | -------------------------------------------------------------------------------------------- |
+| language       | default | set language (for available options, see: [Translations](/docs/TRANSLATIONS.md))             |
+| layout         | default | set layout: `default` (floating glass panel), `classic`, `compact`, `mini`, `seekbar`        |
+| icon_theme     | fluent  | set icon theme. accepts `fluent` or `material` (icons are built in, no font needed)          |
+| icon_style     | mixed   | "mixed", "filled", "outline"                                                                 |
+| font           | Inter   | font for the OSC; Inter ships in `fonts/` (any installed font works, e.g. `mpv-osd-symbols`) |
+| idlescreen     | yes     | show mpv logo when idle                                                                      |
+| window_top_bar | auto    | show OSC window top bar: `"auto"`, `"yes"`, or `"no"` (borderless/fullscreen)                |
+| showwindowed   | yes     | show OSC when windowed                                                                       |
+| showfullscreen | yes     | show OSC when fullscreen                                                                     |
+| showonselect   | no      | show OSC when a select menu is open                                                          |
+| showonpause    | yes     | show OSC when paused                                                                         |
+| keeponpause    | no      | keep OSC visible while paused: `"no"`, `"bottombar"`, `"both"`                               |
+| greenandgrumpy | no      | disable Santa hat in December                                                                |
 
 ### OSC behaviour and scaling
 
-| Option               | Value   | Description                                                                                                                                        |
-| -------------------- | ------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
-| hidetimeout          | 2000    | time (in ms) before OSC hides if no mouse movement                                                                                                 |
-| keep_with_cursor     | yes     | keep OSC visible while cursor hovers over bottom or top bar                                                                                        |
-| fadeduration         | 200     | fade-out duration (in ms), set to `"0"` for no fade                                                                                                |
-| fadein               | yes     | whether to enable fade-in effect                                                                                                                   |
-| minmousemove         | 0       | minimum mouse movement (in pixels) required to show OSC                                                                                            |
-| deadzonesize         | 0.75    | controls how much of the window ignores mouse movement for showing the osc; `0.0` always shows on movement, `1.0` only shows when directly hovered |
-| deadzone_hide        | instant | hide behavior when cursor enters deadzone or leaves window: `"instant"` or `"timeout"`                                                             |
-| osc_on_seek          | yes     | show OSC when seeking                                                                                                                              |
-| osc_on_start         | both    | show OSC/window controls on start of every file (`no`, `bottom`, `top`, `both`)                                                                    |
-| mouse_seek_pause     | yes     | pause video while seeking with mouse move (on button hold)                                                                                         |
-| force_seek_tooltip   | no      | force show seekbar tooltip on mouse drag, even if not hovering seekbar                                                                             |
-| vidscale             | auto    | scale osc with the video. (set to `"no"` to disable)                                                                                               |
-| scalewindowed        | 1.0     | osc scale factor when windowed                                                                                                                     |
-| scalefullscreen      | 1.0     | osc scale factor when fullscreen                                                                                                                   |
+| Option             | Value   | Description                                                                                                                                                           |
+| ------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| hidetimeout        | 2000    | time (in ms) before OSC hides if no mouse movement                                                                                                                    |
+| keep_with_cursor   | yes     | keep OSC visible while cursor hovers over bottom or top bar                                                                                                           |
+| fadeduration       | 200     | fade-out duration (in ms), set to `"0"` for no fade                                                                                                                   |
+| fadein             | yes     | whether to enable fade-in effect                                                                                                                                      |
+| minmousemove       | 0       | minimum mouse movement (in pixels) required to show OSC                                                                                                               |
+| deadzonesize       | 0.75    | controls how much of the window ignores mouse movement for showing the osc; `0.0` always shows on movement, `1.0` only shows when directly hovered                    |
+| deadzone_hide      | instant | hide behavior when cursor enters deadzone or leaves window: `"instant"` or `"timeout"`                                                                                |
+| osc_on_seek        | yes     | show OSC when seeking                                                                                                                                                 |
+| osc_on_start       | both    | show OSC/window controls on start of every file (`no`, `bottom`, `top`, `both`)                                                                                       |
+| mouse_seek_pause   | yes     | pause video while seeking with mouse move (on button hold)                                                                                                            |
+| force_seek_tooltip | no      | force show seekbar tooltip on mouse drag, even if not hovering seekbar                                                                                                |
+| vidscale           | auto    | scale osc with the video. (set to `"no"` to disable)                                                                                                                  |
+| scalewindowed      | 1.0     | osc scale factor when windowed                                                                                                                                        |
+| scalefullscreen    | 1.0     | osc scale factor when fullscreen                                                                                                                                      |
+| vidscale_max       | 1.35    | size cap when scaling with the video, in screen pixels per unit times the system display scaling, so the controls are the same size on every display (`0` = no limit) |
 
 ### Elements display
 
@@ -53,9 +54,9 @@ Create `modernz.conf` in your mpv script-opts directory:
 | ----------------------- | ---------------- | -------------------------------------------------------------------------------- |
 | show_title              | yes              | show title in the OSC                                                            |
 | title                   | `${media-title}` | title: `"${media-title}"` or `"${filename}"`                                     |
-| title_font_size         | 24               | font size of the title text                                                      |
+| title_font_size         | 17               | font size of the title text                                                      |
 | truncate_title          | no               | truncate title with ellipsis if it overflows                                     |
-| chapter_title_font_size | 16               | chapter title font size                                                          |
+| chapter_title_font_size | 14               | chapter title font size                                                          |
 | show_chapter_title      | yes              | show chapter title                                                               |
 | chapter_above_title     | no               | show chapter above title                                                         |
 | chapter_fmt             | %s               | format for chapter display on seekbar hover (set to `"no"` to disable)           |
@@ -63,21 +64,21 @@ Create `modernz.conf` in your mpv script-opts directory:
 | timems                  | no               | show timecodes with milliseconds                                                 |
 | unicodeminus            | no               | use the Unicode minus sign in remaining time                                     |
 | time_format             | dynamic          | `"dynamic"` or `"fixed"`. shows MM:SS when possible, fixed always shows HH:MM:SS |
-| time_font_size          | 16               | font size of the time display                                                    |
+| time_font_size          | 14               | font size of the time display                                                    |
 | cache_info              | no               | show cached time information                                                     |
 | cache_info_speed        | no               | show current cache speed per second                                              |
 | cache_info_font_size    | 12               | font size of the cache information                                               |
-| tooltip_font_size       | 14               | tooltips font size                                                               |
-| speed_font_size         | 16               | speed button font size                                                           |
+| tooltip_font_size       | 13               | tooltips font size                                                               |
+| speed_font_size         | 15               | speed button font size                                                           |
 
 ### Title bar settings
 
-| Option                     | Value            | Description                                                               |
-| -------------------------- | ---------------- | ------------------------------------------------------------------------- |
-| show_window_title          | no               | show window title in borderless/fullscreen mode                           |
-| window_title_font_size     | 26               | window title font size                                                    |
-| window_controls            | yes              | show window controls (close, minimize, maximize) in borderless/fullscreen |
-| windowcontrols_independent | yes              | show window controls (top bar) and bottom bar independently on hover      |
+| Option                     | Value | Description                                                               |
+| -------------------------- | ----- | ------------------------------------------------------------------------- |
+| show_window_title          | no    | show window title in borderless/fullscreen mode                           |
+| window_title_font_size     | 26    | window title font size                                                    |
+| window_controls            | yes   | show window controls (close, minimize, maximize) in borderless/fullscreen |
+| windowcontrols_independent | yes   | show window controls (top bar) and bottom bar independently on hover      |
 
 ### Subtitle and OSD display settings
 
@@ -132,6 +133,28 @@ watch-later-options-remove=osd-margin-y
 | zoom_in_max                | 4             | maximum zoom in value                                                                                              |
 | zoom_out_min               | -1            | minimum zoom out value                                                                                             |
 
+### Glass and panel
+
+These shape the default layout's floating panel and everything drawn in the same material: menus, tooltips, thumbnails and window controls.
+
+| Option                    | Value   | Description                                                                                                                                      |
+| ------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| glass_color               | #17181C | tint of glass surfaces                                                                                                                           |
+| glass_opacity             | 30      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
+| glass_border_opacity      | 14      | opacity of the hairline light edge around glass surfaces, in percent                                                                             |
+| glass_shadow              | yes     | soft shadow under glass surfaces                                                                                                                 |
+| glass_blur                | yes     | frost the video behind glass surfaces (needs `vo=gpu-next`; off for rotated video)                                                               |
+| glass_refraction          | yes     | the edges of glass bend the video behind them and catch the light (with `glass_blur`)                                                            |
+| glass_reduce_transparency | no      | accessibility: frosty, nearly opaque glass                                                                                                       |
+| glass_increase_contrast   | no      | accessibility: black glass with a visible border                                                                                                 |
+| reduce_motion             | no      | accessibility: no spring or scale animations (fades stay)                                                                                        |
+| panel_radius              | 28      | corner radius of the floating panel                                                                                                              |
+| panel_margin              | 20      | distance between the floating panel and the window edges                                                                                         |
+| panel_max_width           | 0       | widest the floating panel gets (`0` = always full width)                                                                                         |
+| muted_text_color          | #AEB7C4 | color of secondary text: duration, chapter title, menu details                                                                                   |
+| modern_menus              | yes     | show track, playlist, chapter and audio output lists as glass menus instead of mpv's select lists                                                |
+| menu_max_items            | 9       | rows a menu shows before it scrolls                                                                                                              |
+
 ### Colors and style
 
 | Option                            | Value     | Description                                                                                       |
@@ -144,10 +167,10 @@ watch-later-options-remove=osd-margin-y
 | windowcontrols_min_hover          | `#43CB44` | color of minimize window controls on hover                                                        |
 | title_color                       | `#FFFFFF` | color of the title                                                                                |
 | seekbar_cache_color               | `#B1B1B1` | color of the cache ranges on the seekbar                                                          |
-| seekbarfg_color                   | `#FF8232` | color of the seekbar progress                                                                     |
-| seekbarbg_color                   | `#999999` | color of the remaining seekbar                                                                    |
-| seek_handle_color                 | `#C96508` | color of the seekbar handle                                                                       |
-| seek_handle_border_color          | `#FF8232` | inner border color drawn inside the seekbar handle (set to `disable` to disable)                  |
+| seekbarfg_color                   | #FFFFFF   | color of the seekbar progress                                                                     |
+| seekbarbg_color                   | #FFFFFF   | color of the remaining seekbar                                                                    |
+| seek_handle_color                 | #FFFFFF   | color of the seekbar handle                                                                       |
+| seek_handle_border_color          | disable   | inner border color drawn inside the seekbar handle (set to `disable` to disable)                  |
 | volumebar_match_seek_color        | no        | match volume bar color with seekbar color (ignores `side_buttons_color`)                          |
 | time_color                        | `#FFFFFF` | color of the timestamps                                                                           |
 | chapter_title_color               | `#FFFFFF` | color of the chapter title                                                                        |
@@ -156,9 +179,9 @@ watch-later-options-remove=osd-margin-y
 | middle_buttons_color              | `#FFFFFF` | color of the middle buttons (skip, jump, chapter, etc.)                                           |
 | playpause_color                   | `#FFFFFF` | color of the play/pause button                                                                    |
 | held_element_color                | `#999999` | color of the element when held down (pressed)                                                     |
-| hover_effect_color                | `#FF8232` | color of a hovered button when `hover_effect` includes `"color"`                                  |
-| thumbnail_box_color               | `#111111` | color of the background for thumbnail box                                                         |
-| thumbnail_box_outline             | `#404040` | color of the border outline for thumbnail box                                                     |
+| hover_effect_color                | #FFFFFF   | color of a hovered button when `hover_effect` includes `"color"`                                  |
+| thumbnail_box_color               | #101114   | color of the background for thumbnail box                                                         |
+| thumbnail_box_outline             | #FFFFFF   | color of the border outline for thumbnail box                                                     |
 | nibble_color                      | `#FF8232` | color of chapter nibbles on the seekbar                                                           |
 | nibble_current_color              | `#FFFFFF` | color of the current chapter nibble on the seekbar                                                |
 | ab_loop_color                     | `#2596be` | color of the A/B loop range on the seekbar                                                        |
@@ -168,43 +191,43 @@ watch-later-options-remove=osd-margin-y
 | window_fade_strength              | 100       | strength of the window title bar fade (0 to disable)                                              |
 | window_fade_blur_strength         | 100       | blur strength for the window title bar. caution: high values can take a lot of CPU time to render |
 | window_fade_transparency_strength | 0         | use with "window_fade_blur_strength=0" to create a transparency box                               |
-| thumbnail_box_padding             | 4.5       | thumbnail box padding around the image                                                            |
-| thumbnail_box_radius              | 4         | round corner radius for thumbnail box border (0 to disable)                                       |
+| thumbnail_box_padding             | 2         | thumbnail box padding around the image                                                            |
+| thumbnail_box_radius              | 6         | round corner radius for thumbnail box border (0 to disable)                                       |
 | thumbnail_box_outline_size        | 1         | thumbnail box border outline size (thickness)                                                     |
 
 ### Button interaction settings
 
-| Option                | Value               | Description                                                                                       |
-| -------------------   | ------------------- | ------------------------------------------------------------------------------------------------- |
-| hover_effect          | size,glow,color,box | active button hover effects: `glow`, `size`, `color`, `box`; can use multiple separated by commas |
-| button_hover_size     | 115                 | relative size of a hovered button if "size" effect is active                                      |
-| button_held_size      | 100                 | relative size of a button when held/pressed. below 100 shrinks button when held down              |
-| button_held_box_alpha | 18                  | alpha of the hover background box when a button is held down                                      |
-| button_glow_amount    | 5                   | glow intensity when `"glow"` hover effect is active                                               |
-| slider_hover_size     | 100                 | relative size of a hovered slider handle (100 = no size change)                                   |
-| tooltip_hints         | yes                 | enable tooltips for most buttons. seek and volume tooltips are always enabled                     |
+| Option                | Value | Description                                                                                       |
+| --------------------- | ----- | ------------------------------------------------------------------------------------------------- |
+| hover_effect          | box   | active button hover effects: `glow`, `size`, `color`, `box`; can use multiple separated by commas |
+| button_hover_size     | 115   | relative size of a hovered button if "size" effect is active                                      |
+| button_held_size      | 100   | relative size of a button when held/pressed. below 100 shrinks button when held down              |
+| button_held_box_alpha | 18    | alpha of the hover background box when a button is held down                                      |
+| button_glow_amount    | 5     | glow intensity when `"glow"` hover effect is active                                               |
+| slider_hover_size     | 100   | relative size of a hovered slider handle (100 = no size change)                                   |
+| tooltip_hints         | yes   | enable tooltips for most buttons. seek and volume tooltips are always enabled                     |
 
 ### Progress bar settings
 
-| Option                        | Value    | Description                                                                                 |
-| --------------------------    | -------- | ------------------------------------------------------------------------------------------- |
-| seek_handle_size              | 0.8      | size ratio of the seekbar handle (range: 0 ~ 1)                                             |
-| seek_handle_border_size       | 0.42     | border thickness as a fraction of the handle radius                                         |
-| seek_handle_border_hover_size | 0.31     | border thickness when handle is hovered (set equal to `seek_handle_border_size` to disable) |
-| seekbar_height                | medium   | seekbar height preset: `small`, `medium`, `large`, `xlarge`                                 |
-| seekrange                     | yes      | show seek range overlay                                                                     |
-| seekrangealpha                | 150      | transparency of the seek range                                                              |
-| livemarkers                   | yes      | update chapter markers on the seekbar when duration changes                                 |
-| seekbarkeyframes              | yes      | use keyframes when dragging the seekbar                                                     |
-| slider_rounded_corners        | yes      | rounded corners seekbar slider                                                              |
-| nibbles_style                 | gap      | chapter nibble style: `gap`, `triangle`, `bar` or `single-bar`                              |
-| nibbles_top                   | yes      | top chapter nibbles above seekbar                                                           |
-| nibbles_bottom                | yes      | bottom chapter nibbles below seekbar                                                        |
-| automatickeyframemode         | yes      | automatically set keyframes for the seekbar based on video length                           |
-| automatickeyframelimit        | 600      | videos longer than this (in seconds) will have keyframes on the seekbar                     |
-| persistent_progress           | no       | always show a small progress line at the bottom of the screen                               |
-| persistent_progress_height    | 17       | height of the persistent progress bar                                                       |
-| persistent_buffer             | no       | show cached buffer status in the persistent progress line                                   |
+| Option                        | Value | Description                                                                                 |
+| ----------------------------- | ----- | ------------------------------------------------------------------------------------------- |
+| seek_handle_size              | 0.8   | size ratio of the seekbar handle (range: 0 ~ 1)                                             |
+| seek_handle_border_size       | 0.42  | border thickness as a fraction of the handle radius                                         |
+| seek_handle_border_hover_size | 0.31  | border thickness when handle is hovered (set equal to `seek_handle_border_size` to disable) |
+| seekbar_height                | large | seekbar height preset: `small`, `medium`, `large`, `xlarge`                                 |
+| seekrange                     | yes   | show seek range overlay                                                                     |
+| seekrangealpha                | 150   | transparency of the seek range                                                              |
+| livemarkers                   | yes   | update chapter markers on the seekbar when duration changes                                 |
+| seekbarkeyframes              | yes   | use keyframes when dragging the seekbar                                                     |
+| slider_rounded_corners        | yes   | rounded corners seekbar slider                                                              |
+| nibbles_style                 | gap   | chapter nibble style: `gap`, `triangle`, `bar` or `single-bar`                              |
+| nibbles_top                   | yes   | top chapter nibbles above seekbar                                                           |
+| nibbles_bottom                | yes   | bottom chapter nibbles below seekbar                                                        |
+| automatickeyframemode         | yes   | automatically set keyframes for the seekbar based on video length                           |
+| automatickeyframelimit        | 600   | videos longer than this (in seconds) will have keyframes on the seekbar                     |
+| persistent_progress           | no    | always show a small progress line at the bottom of the screen                               |
+| persistent_progress_height    | 17    | height of the persistent progress bar                                                       |
+| persistent_buffer             | no    | show cached buffer status in the persistent progress line                                   |
 
 ### Miscellaneous settings
 
@@ -213,89 +236,89 @@ watch-later-options-remove=osd-margin-y
 | visibility                    | auto              | only used at init to set visibility_mode(...)                 |
 | visibility_modes              | never_auto_always | visibility modes to cycle through, modes are separated by `_` |
 | tick_delay                    | 0.0167            | minimum interval between OSC redraws (in seconds)             |
-| tick_delay_follow_display_fps | no                | use display FPS as the minimum redraw interval                |
+| tick_delay_follow_display_fps | yes               | use display FPS as the minimum redraw interval                |
 
 ### Elements Position
 
 Useful when adjusting font size or type, this will help you change the affected elements position
 
-| Option                      | Value | Description                                                            |
-| --------------------------- | ----- | ---------------------------------------------------------------------- |
-| title_offset                | 20    | title vertical offset relative to seekbar                              |
-| title_with_chapter_offset   | 5     | title vertical offset if a chapter title is below it                   |
-| chapter_title_offset        | 18    | chapter title vertical offset relative to seekbar                      |
-| chapter_above_title_offset  | 3     | chapter offset when shown above title                                  |
-| time_codes_offset           | 0     | time codes vertical offset relative to seekbar                         |
-| tooltip_height_offset       | 5     | tooltip height position offset                                         |
-| portrait_window_trigger     | 950   | portrait window width trigger to move some elements                    |
-| hide_volume_bar_trigger     | 1150  | hide volume bar trigger window width                                   |
-| osc_height                  | 60    | osc height                                                             |
+| Option                     | Value | Description                                          |
+| -------------------------- | ----- | ---------------------------------------------------- |
+| title_offset               | 20    | title vertical offset relative to seekbar            |
+| title_with_chapter_offset  | 5     | title vertical offset if a chapter title is below it |
+| chapter_title_offset       | 18    | chapter title vertical offset relative to seekbar    |
+| chapter_above_title_offset | 3     | chapter offset when shown above title                |
+| time_codes_offset          | 0     | time codes vertical offset relative to seekbar       |
+| tooltip_height_offset      | 5     | tooltip height position offset                       |
+| portrait_window_trigger    | 950   | portrait window width trigger to move some elements  |
+| hide_volume_bar_trigger    | 1150  | hide volume bar trigger window width                 |
+| osc_height                 | 60    | osc height                                           |
 
 ### Mouse Commands (User Options)
 
 Customize the button function based on mouse actions.
 
-| Type                          | Option                           | Function                                     |
-| ----------------------------- | -------------------------------- | -------------------------------------------- |
-| Title                         | title_mbtn_left_command          | `script-binding stats/display-page-5`        |
-|                               | title_mbtn_mid_command           | `show-text ${path}`                          |
-|                               | title_mbtn_right_command         | `script-binding select/select-watch-history` |
-| Chapter title                 | chapter_title_mbtn_left_command  | `script-binding select/select-chapter`       |
-|                               | chapter_title_mbtn_right_command | `show-text ${chapter-list} 3000`             |
-| Seekbar                       | seekbar_wheel_up_command         | `seek 10`                                    |
-|                               | seekbar_wheel_down_command       | `seek -10`                                   |
-| Playlist button               | playlist_mbtn_left_command       | `script-binding select/select-playlist`      |
-|                               | playlist_mbtn_right_command      | `script-binding select/menu`                 |
-| Volume button                 | vol_ctrl_mbtn_left_command       | `no-osd cycle mute`                          |
-|                               | vol_ctrl_mbtn_right_command      | `script-binding select/select-audio-device`  |
-|                               | vol_ctrl_wheel_down_command      | `osd-msg add volume -5`                      |
-|                               | vol_ctrl_wheel_up_command        | `osd-msg add volume 5`                       |
-| Volume bar                    | volumebar_wheel_down_command     | `osd-msg add volume -5`                      |
-|                               | volumebar_wheel_up_command       | `osd-msg add volume 5`                       |
-| Audio button                  | audio_track_mbtn_left_command    | `script-binding select/select-aid`           |
-|                               | audio_track_mbtn_mid_command     | `cycle audio down`                           |
-|                               | audio_track_mbtn_right_command   | `cycle audio`                                |
-|                               | audio_track_wheel_down_command   | `cycle audio`                                |
-|                               | audio_track_wheel_up_command     | `cycle audio down`                           |
-| Subtitle button               | sub_track_mbtn_left_command      | `script-binding select/select-sid`           |
-|                               | sub_track_mbtn_mid_command       | `cycle sub down`                             |
-|                               | sub_track_mbtn_right_command     | `cycle sub`                                  |
-|                               | sub_track_wheel_down_command     | `cycle sub`                                  |
-|                               | sub_track_wheel_up_command       | `cycle sub down`                             |
-| Play/Pause button             | play_pause_mbtn_left_command     | `cycle pause`                                |
-|                               | play_pause_mbtn_mid_command      | `cycle-values loop-playlist inf no`          |
-|                               | play_pause_mbtn_right_command    | `cycle-values loop-file inf no`              |
-| Chapter skip buttons          | chapter_prev_mbtn_left_command   | `add chapter -1`                             |
-|                               | chapter_prev_mbtn_mid_command    | `show-text ${chapter-list} 3000`             |
-|                               | chapter_prev_mbtn_right_command  | `script-binding select/select-chapter`       |
-|                               | chapter_next_mbtn_left_command   | `add chapter 1`                              |
-|                               | chapter_next_mbtn_mid_command    | `show-text ${chapter-list} 3000`             |
-|                               | chapter_next_mbtn_right_command  | `script-binding select/select-chapter`       |
-| Playlist skip Buttons         | playlist_prev_mbtn_left_command  | `playlist-prev`                              |
-|                               | playlist_prev_mbtn_mid_command   | `show-text ${playlist} 3000`                 |
-|                               | playlist_prev_mbtn_right_command | `script-binding select/select-playlist`      |
-|                               | playlist_next_mbtn_left_command  | `playlist-next`                              |
-|                               | playlist_next_mbtn_mid_command   | `show-text ${playlist} 3000`                 |
-|                               | playlist_next_mbtn_right_command | `script-binding select/select-playlist`      |
-| Fullscreen button             | fullscreen_mbtn_left_command     | `cycle fullscreen`                           |
-|                               | fullscreen_mbtn_right_command    | `cycle window-maximized`                     |
-| Info button                   | info_mbtn_left_command           | `script-binding stats/display-page-1-toggle` |
-| Pin (ontop) button            | ontop_mbtn_left_command          | `osd-msg cycle ontop`                        |
-| Screenshot button             | screenshot_mbtn_left_command     | `osd-msg screenshot video`                   |
-| Loop button                   | file_loop_mbtn_left_command      | `osd-msg cycle-values loop-file inf no`      |
-|                               | file_loop_mbtn_right_command     | `osd-msg cycle-values loop-playlist inf no`  |
-| Speed button                  | speed_mbtn_left_command          | `osd-msg add speed 1`                        |
-|                               | speed_mbtn_right_command         | `osd-msg set speed 1`                        |
-|                               | speed_wheel_down_command         | `osd-msg add speed -0.25`                    |
-|                               | speed_wheel_up_command           | `osd-msg add speed 0.25`                     |
+| Type                  | Option                           | Function                                     |
+| --------------------- | -------------------------------- | -------------------------------------------- |
+| Title                 | title_mbtn_left_command          | `script-binding stats/display-page-5`        |
+|                       | title_mbtn_mid_command           | `show-text ${path}`                          |
+|                       | title_mbtn_right_command         | `script-binding select/select-watch-history` |
+| Chapter title         | chapter_title_mbtn_left_command  | `script-binding select/select-chapter`       |
+|                       | chapter_title_mbtn_right_command | `show-text ${chapter-list} 3000`             |
+| Seekbar               | seekbar_wheel_up_command         | `seek 10`                                    |
+|                       | seekbar_wheel_down_command       | `seek -10`                                   |
+| Playlist button       | playlist_mbtn_left_command       | `script-binding select/select-playlist`      |
+|                       | playlist_mbtn_right_command      | `script-binding select/menu`                 |
+| Volume button         | vol_ctrl_mbtn_left_command       | `no-osd cycle mute`                          |
+|                       | vol_ctrl_mbtn_right_command      | `script-binding select/select-audio-device`  |
+|                       | vol_ctrl_wheel_down_command      | `osd-msg add volume -5`                      |
+|                       | vol_ctrl_wheel_up_command        | `osd-msg add volume 5`                       |
+| Volume bar            | volumebar_wheel_down_command     | `osd-msg add volume -5`                      |
+|                       | volumebar_wheel_up_command       | `osd-msg add volume 5`                       |
+| Audio button          | audio_track_mbtn_left_command    | `script-binding select/select-aid`           |
+|                       | audio_track_mbtn_mid_command     | `cycle audio down`                           |
+|                       | audio_track_mbtn_right_command   | `cycle audio`                                |
+|                       | audio_track_wheel_down_command   | `cycle audio`                                |
+|                       | audio_track_wheel_up_command     | `cycle audio down`                           |
+| Subtitle button       | sub_track_mbtn_left_command      | `script-binding select/select-sid`           |
+|                       | sub_track_mbtn_mid_command       | `cycle sub down`                             |
+|                       | sub_track_mbtn_right_command     | `cycle sub`                                  |
+|                       | sub_track_wheel_down_command     | `cycle sub`                                  |
+|                       | sub_track_wheel_up_command       | `cycle sub down`                             |
+| Play/Pause button     | play_pause_mbtn_left_command     | `cycle pause`                                |
+|                       | play_pause_mbtn_mid_command      | `cycle-values loop-playlist inf no`          |
+|                       | play_pause_mbtn_right_command    | `cycle-values loop-file inf no`              |
+| Chapter skip buttons  | chapter_prev_mbtn_left_command   | `add chapter -1`                             |
+|                       | chapter_prev_mbtn_mid_command    | `show-text ${chapter-list} 3000`             |
+|                       | chapter_prev_mbtn_right_command  | `script-binding select/select-chapter`       |
+|                       | chapter_next_mbtn_left_command   | `add chapter 1`                              |
+|                       | chapter_next_mbtn_mid_command    | `show-text ${chapter-list} 3000`             |
+|                       | chapter_next_mbtn_right_command  | `script-binding select/select-chapter`       |
+| Playlist skip Buttons | playlist_prev_mbtn_left_command  | `playlist-prev`                              |
+|                       | playlist_prev_mbtn_mid_command   | `show-text ${playlist} 3000`                 |
+|                       | playlist_prev_mbtn_right_command | `script-binding select/select-playlist`      |
+|                       | playlist_next_mbtn_left_command  | `playlist-next`                              |
+|                       | playlist_next_mbtn_mid_command   | `show-text ${playlist} 3000`                 |
+|                       | playlist_next_mbtn_right_command | `script-binding select/select-playlist`      |
+| Fullscreen button     | fullscreen_mbtn_left_command     | `cycle fullscreen`                           |
+|                       | fullscreen_mbtn_right_command    | `cycle window-maximized`                     |
+| Info button           | info_mbtn_left_command           | `script-binding stats/display-page-1-toggle` |
+| Pin (ontop) button    | ontop_mbtn_left_command          | `osd-msg cycle ontop`                        |
+| Screenshot button     | screenshot_mbtn_left_command     | `osd-msg screenshot video`                   |
+| Loop button           | file_loop_mbtn_left_command      | `osd-msg cycle-values loop-file inf no`      |
+|                       | file_loop_mbtn_right_command     | `osd-msg cycle-values loop-playlist inf no`  |
+| Speed button          | speed_mbtn_left_command          | `osd-msg add speed 1`                        |
+|                       | speed_mbtn_right_command         | `osd-msg set speed 1`                        |
+|                       | speed_wheel_down_command         | `osd-msg add speed -0.25`                    |
+|                       | speed_wheel_up_command           | `osd-msg add speed 0.25`                     |
 
 ### Auto Profile
 
-Below is an example of an auto-profile in `mpv.conf` you can use to set any of ModernZ options based on certain conditions, in this case `when window is pinned or fullscreen`.
+Below is an example of an auto-profile in `mpv.conf` you can use to set any of ModernGlass options based on certain conditions, in this case `when window is pinned or fullscreen`.
 
 ```EditorConfig
-[ModernZ-Custom]
-    profile-desc=Apply ModernZ options on pin or fullscreen
+[ModernGlass-Custom]
+    profile-desc=Apply ModernGlass options on pin or fullscreen
     profile-cond=ontop == true or fullscreen
     profile-restore=copy-equal
     script-opts-append=modernz-persistent_progress=yes

@@ -1,6 +1,6 @@
-# ModernZ Translations Guide
+# ModernGlass Translations Guide
 
-This guide provides everything you need to use, modify, and add translations for the ModernZ OSC interface.
+This guide provides everything you need to use, modify, and add translations for the ModernGlass OSC interface.
 
 ## Table of Contents
 
@@ -33,7 +33,7 @@ To get started with translations:
 
 ## Available Languages
 
-ModernZ currently includes translations for the following languages: 
+ModernGlass currently includes translations for the following languages: 
 
 - Default (`default`)
   - Internal and is not included in JSON locale file
@@ -165,7 +165,7 @@ ModernZ currently includes translations for the following languages:
 
 If you'd like to share your translations with the community:
 
-1. **Fork the repository:** Visit the ModernZ GitHub page and click **Fork** to create your own copy.
+1. **Fork the repository:** Visit the ModernGlass GitHub page and click **Fork** to create your own copy.
 2. **Edit the `modernz-locale.json` file:** Add your translations to the file in your forked repository.
 3. **Submit a Pull Request:** Open a pull request to propose your changes for review and integration.
 

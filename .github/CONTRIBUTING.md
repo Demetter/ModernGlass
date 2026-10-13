@@ -4,9 +4,9 @@ How to contribute
 General
 -------
 
-All contributions are generally welcomed. We always appreciate the effort and time taken by others to improve or fix ModernZ.
+All contributions are generally welcomed. We always appreciate the effort and time taken by others to improve or fix ModernGlass.
 
-If you're hesitant or not sure about a specific contribution, you can always open an issue to ask a question or discuss something in detail to see if your contribution goes with ModernZ plans or not.
+If you're hesitant or not sure about a specific contribution, you can always open an issue to ask a question or discuss something in detail to see if your contribution goes with ModernGlass plans or not.
 
 Main project goals
 ------------------
@@ -14,9 +14,9 @@ Main project goals
 - Revive and maintain the modern osc origin, as it is either abandoned or partially maintained by adding new code without fixing the old.
 - Apply common features that are missing and most users would want (ie: customization, button functions, lists and so on)
 
-ModernZ is trying to be in a middle area between stock OSC and a project like uosc. One is too simple, the other is too complicated.
+ModernGlass is trying to be in a middle area between stock OSC and a project like uosc. One is too simple, the other is too complicated.
 
-One of the first things that happened in ModernZ was to re-base on stock osc and integrate features that mpv already has, which eliminated a ton of bloat from the code.
+One of the first things that happened in ModernZ (which ModernGlass builds on) was to re-base on stock osc and integrate features that mpv already has, which eliminated a ton of bloat from the code.
 
 In essence, we want to be better than stock OSC, but we don't want to do everything. That is why for example we integrated locale as extras, and the same thing was done for the pause indicator. 
 
@@ -39,7 +39,7 @@ Write good commit messages
   the change.
 - The subject line (the first line in a commit message) must contain an
   identifying prefix, followed by a short description what
-  impact this commit has on ModernZ osc.
+  impact this commit has on ModernGlass osc.
 
 Split changes into multiple commits
 -----------------------------------

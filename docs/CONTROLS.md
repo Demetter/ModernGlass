@@ -1,6 +1,6 @@
-# ModernZ Controls Guide
+# ModernGlass Controls Guide
 
-<img width="1717" height="108" alt="modernz-buttons" src="https://github.com/user-attachments/assets/8b310e93-eefe-4362-a5d1-993fb5d42fb3" />
+![ModernGlass panel](/assets/panel.webp)
 
 ## Button Interactions
 
@@ -91,6 +91,14 @@ Below is a list that explains the OSC buttons function depending on how you inte
 | Left mouse click  | Toggle mute on/off            |
 | Right mouse click | Show audio device select menu |
 | Scroll wheel      | Change volume up/down         |
+
+### More (⋯)
+
+In the default layout, the less used controls live in the ⋯ menu at the end of the panel.
+
+| Action           | Function                                                                                   |
+| ---------------- | ------------------------------------------------------------------------------------------ |
+| Left mouse click | Open the menu: playback speed, chapters, audio output, loop, keep on top, screenshot, statistics |
 
 ### Statistics
 

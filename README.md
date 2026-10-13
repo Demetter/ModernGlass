@@ -1,405 +1,197 @@
-<h1 align="center">ModernZ - A Sleek Alternative OSC for mpv</h1>
-
-A sleek and modern OSC for [mpv](https://mpv.io/). This project is a fork of ModernX that enhances functionality by adding more features while preserving the core standards of mpv's OSC.
-
-![modernz_preview](https://github.com/user-attachments/assets/69a967ae-cf8a-4a92-9193-4799f901cd94)
-
 <p align="center">
-  <a href="#installation"><strong>Installation »</strong></a><br>
-  <a href="#configuration">Configuration</a> ·
-  <a href="#controls">Controls</a> ·
-  <a href="#translations">OSC Language</a> ·
-  <a href="#extras">Extra Scripts</a>
+  <img src="assets/banner.webp" alt="ModernGlass" width="100%">
 </p>
 
-## Features
+<p align="center">
+  Frosted, refractive glass controls for <a href="https://mpv.io">mpv</a>, with menus, thumbnails and motion designed as one system.
+</p>
 
-- 🎨 Modern, customizable interface with multiple layouts, themes, and icon styles [[options](#customization)]
-- 🖱️ Independent hover zone for top bar (window controls bar) and bottom bar (OSC)
-- 📷 Image Viewer mode with zoom controls [[details](/docs/IMAGE_VIEWER.md)]
-- 🎛️ Buttons: download, playlist, speed control, screenshot, pin, loop, shuffle, and more. [[details](/docs/CONTROLS.md)]
-- 📄 Interactive menus for playlist, subtitles, chapters, audio tracks, and audio devices
-- 🌐 Multi-language support with JSON [locale](#translations) integration
-- ⌨️ Configurable controls [[details](#controls)]
-- 🖼️ Video thumbnail previews with [thumbfast](https://github.com/po5/thumbfast)
+<p align="center">
+  <img alt="mpv 0.39+" src="https://img.shields.io/badge/mpv-0.39%2B-2b2d33?style=flat-square&labelColor=17181c">
+  <img alt="Windows, macOS, Linux" src="https://img.shields.io/badge/platform-Windows%20%C2%B7%20macOS%20%C2%B7%20Linux-2b2d33?style=flat-square&labelColor=17181c">
+  <img alt="License LGPL-2.1" src="https://img.shields.io/badge/license-LGPL--2.1-2b2d33?style=flat-square&labelColor=17181c">
+</p>
 
-<a href="/docs/INTERACTIVE_MENUS.md">
-    <img width="350" alt="preview_features_button_md" src="https://github.com/user-attachments/assets/f7914071-0690-45ed-b1cf-6ced74f3a8e3" />
-</a>
+<p align="center">
+  <a href="#installation"><b>Install</b></a> &nbsp;·&nbsp;
+  <a href="#configuration">Configure</a> &nbsp;·&nbsp;
+  <a href="#controls">Controls</a> &nbsp;·&nbsp;
+  <a href="docs/USER_OPTS.md">All options</a> &nbsp;·&nbsp;
+  <a href="#credits">Credits</a>
+</p>
 
-## Customization
-ModernZ provides a wide range of customization options, including multiple layouts, themes, icon styles, color adjustments, and much more.
+<br>
 
-### Layouts
-Choose the layout that suits your preference using the `layout` option in your `modernz.conf`, which accepts: `default`, `compact`, `mini`, and `seekbar`
+<p align="center">
+  <img src="assets/hero.webp" alt="ModernGlass playing a golden-hour mountain scene" width="100%">
+</p>
 
-<table>
-    <thead>
-        <tr>
-            <th><code>default</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="125" alt="layout_default" src="https://github.com/user-attachments/assets/afa29219-d3ea-490b-bf34-530a9ba212a4" /></td>
-        </tr>
-    </tbody>
-</table>
-<table>
-    <thead>
-        <tr>
-            <th><code>compact</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="125" alt="layout_compact" src="https://github.com/user-attachments/assets/6a51fd86-5ed0-4162-9991-8edad2250221" /></td>
-        </tr>
-    </tbody>
-</table>
-<table>
-    <thead>
-        <tr>
-            <th><code>mini</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="125" alt="layout_mini" src="https://github.com/user-attachments/assets/a4f5d467-0286-4280-b284-9aaec8e6e42f" /></td>
-        </tr>
-    </tbody>
-</table>
-<table>
-    <thead>
-        <tr>
-            <th><code>seekbar</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="124" alt="layout_seekbar" src="https://github.com/user-attachments/assets/4479b9d3-cdfb-4ebb-ac85-8d4c8ba101e1" /></td>
-        </tr>
-    </tbody>
-</table>
+<br>
 
-### Themes
+## Highlights
 
-You can also change the icon theme to `fluent` or `material` to match your preferred style by using the `icon_theme` option in your `modernz.conf`.
+- **Real glass.** A GPU shader frosts the video behind every surface, bends it at the edges like a thick lens, catches light along the rim and casts a soft shadow. It is a material, not a blurred rectangle.
+- **Adapts to the picture.** Over bright scenes the glass deepens and the shadow grows, so white controls stay readable on snow, sky or a white frame.
+- **Menus that belong to the interface.** Audio, subtitles, playlist, chapters, speed and audio output open as glass menus that grow out of their button. Submenus slide in place, and hover states settle on a spring.
+- **Seekbar thumbnails built in.** thumbz renders previews in a background mpv and fills in a storyboard of the whole file while you watch. It works with software decoding on any GPU and tone-maps HDR.
+- **One size on every display.** The controls keep the same size from a 1080p monitor to a 5K ultrawide, and follow your system's display scaling.
+- **Accessible.** Reduce transparency, increase contrast and reduce motion are one option each.
+- **Light on the GPU.** The blur works on a 270-row copy of the frame at any resolution, and switches off while the controls are hidden.
+
+## Gallery
 
 <table>
-    <thead>
-        <tr>
-            <th><code>fluent</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="125" alt="theme_fluent" src="https://github.com/user-attachments/assets/0fb0580c-6389-4427-8f23-e71ac1092aca" /></td>
-        </tr>
-    </tbody>
+  <tr>
+    <td width="50%"><img src="assets/menu-audio.webp" alt="Audio track menu"></td>
+    <td width="50%"><img src="assets/menu-subtitles.webp" alt="Subtitle menu"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Audio tracks</sub></td>
+    <td align="center"><sub>Subtitles</sub></td>
+  </tr>
+  <tr>
+    <td width="50%"><img src="assets/menu-speed.webp" alt="Playback speed submenu"></td>
+    <td width="50%"><img src="assets/menu-playlist.webp" alt="Playlist menu over a bright sky"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Playback speed, from the ⋯ menu</sub></td>
+    <td align="center"><sub>Playlist, over a bright scene</sub></td>
+  </tr>
 </table>
+
+<p align="center">
+  <img src="assets/thumbnails.webp" alt="Seekbar thumbnail preview" width="100%">
+  <br><sub>Seekbar thumbnails with the chapter name</sub>
+</p>
 
 <table>
-    <thead>
-        <tr>
-            <th><code>material</code></th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1961" height="125" alt="theme_material" src="https://github.com/user-attachments/assets/95d2ebd6-b87d-4170-8faa-cb7112c3482a" /></td>
-        </tr>
-    </tbody>
+  <tr>
+    <td width="70%"><img src="assets/image-viewer.webp" alt="Image viewer controls"></td>
+    <td width="30%" align="center"><img src="assets/window-controls.webp" alt="Window controls"></td>
+  </tr>
+  <tr>
+    <td align="center"><sub>Image viewer with zoom controls</sub></td>
+    <td align="center"><sub>Window controls in borderless mode</sub></td>
+  </tr>
 </table>
 
-### Icon Styles
-
-Both `fluent` and `material` themes have different icon styles as well. By using the `icon_style` option, you can choose `mixed`, `filled`, or `outline`.
+### Accessibility
 
 <table>
-    <thead>
-        <tr>
-            <th colspan="2"><code>fluent</code></th>
-        </tr>
-        <tr>
-            <th>Style</th>
-            <th>Preview</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>mixed</code></td>
-            <td><img width="1961" height="125" alt="icon_style_fluent_mixed" src="https://github.com/user-attachments/assets/ce59d30d-adcf-4961-b153-4711a7bc12c6" /></td>
-        </tr>
-        <tr>
-            <td><code>filled</code></td>
-            <td><img width="1961" height="125" alt="icon_style_fluent_filled" src="https://github.com/user-attachments/assets/a5047c68-c8be-43c9-9c5a-c12dbeeb916f" /></td>
-        </tr>
-        <tr>
-            <td><code>outline</code></td>
-            <td><img width="1961" height="125" alt="icon_style_fluent_outline" src="https://github.com/user-attachments/assets/ce660cf4-b3f9-43a1-af92-fe2175a43bf6" /></td>
-        </tr>
-    </tbody>
+  <tr><td><img src="assets/panel.webp" alt="Default glass"></td></tr>
+  <tr><td align="center"><sub>Default</sub></td></tr>
+  <tr><td><img src="assets/a11y-contrast.webp" alt="Increase contrast"></td></tr>
+  <tr><td align="center"><sub><code>glass_increase_contrast=yes</code></sub></td></tr>
+  <tr><td><img src="assets/a11y-reduce.webp" alt="Reduce transparency"></td></tr>
+  <tr><td align="center"><sub><code>glass_reduce_transparency=yes</code></sub></td></tr>
 </table>
 
-<table>
-    <thead>
-        <tr>
-            <th colspan="2"><code>material</code></th>
-        </tr>
-        <tr>
-            <th>Style</th>
-            <th>Preview</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>mixed</code></td>
-            <td><img width="1961" height="125" alt="icon_style_material_mixed" src="https://github.com/user-attachments/assets/3fb6730b-3ec2-4ce2-80e8-41faf2aced8c" /></td>
-        </tr>
-        <tr>
-            <td><code>filled</code></td>
-            <td><img width="1961" height="125" alt="icon_style_material_filled" src="https://github.com/user-attachments/assets/befe569c-ea72-42b4-a0f0-f189578a0df5" /></td>
-        </tr>
-        <tr>
-            <td><code>outline</code></td>
-            <td><img width="1961" height="125" alt="icon_style_material_outline" src="https://github.com/user-attachments/assets/8f28b937-d03c-4920-98c4-b69998989626" /></td>
-        </tr>
-    </tbody>
-</table>
-
-### Seek Bar
-
-If you find the seek bar too thin or too thick, you can easily adjust its size using the `seekbar_height` option. Available values include `small`, `medium`, `large`, and `xlarge`.
-
-<table>
-    <tr>
-        <th><code>small</code></th>
-        <th><code>medium</code> (Default)</th>
-    </tr>
-    <tr>
-        <td><img width="500" height="125" alt="seekbar_height_small" src="https://github.com/user-attachments/assets/d233d440-9915-4796-8cf7-5c9e85a0b27c" /></td>
-        <td><img width="500" height="125" alt="seekbar_height_medium" src="https://github.com/user-attachments/assets/cbe7d65c-c35b-41c2-a66a-c57c09665e8d" /></td>
-    </tr>
-    <tr>
-        <th><code>large</code></th>
-        <th><code>xlarge</code></th>
-    </tr>
-    <tr>
-        <td><img width="500" height="125" alt="seekbar_height_large" src="https://github.com/user-attachments/assets/a2d76a38-b25b-4501-b38c-707db8c5f16f" /></td>
-        <td><img width="500" height="125" alt="seekbar_height_xlarge" src="https://github.com/user-attachments/assets/1542a3aa-e905-4c8a-a797-ee8841b33ca2" /></td>
-    </tr>
-</table>
-
-### Chapter Markers
-You can change the chapter markers style by using the `nibbles_style` option, which accepts: `gap`, `triangle`, `bar`, and `single-bar`
-
-<table>
-    <tr>
-        <th><code>gap</code> (Default)</th>
-        <th><code>triangle</code></th>
-    </tr>
-    <tr>
-        <td><img width="550" height="125" alt="chapter_marker_gap" src="https://github.com/user-attachments/assets/27d8e320-8df9-4f70-80a0-23f1e9116ac7" /></td>
-        <td><img width="550" height="125" alt="chapter_marker_triangle" src="https://github.com/user-attachments/assets/cc8774b6-3271-496c-909b-b662c01f9ebb" /></td>
-    </tr>
-    <tr>
-        <th><code>bar</code></th>
-        <th><code>single-bar</code></th>
-    </tr>
-    <tr>
-        <td><img width="550" height="125" alt="chapter_marker_bar" src="https://github.com/user-attachments/assets/1674d5fe-0aa7-4240-9b14-56077852b2ce" /></td>
-        <td><img width="550" height="125" alt="chapter_marker_singlebar" src="https://github.com/user-attachments/assets/ef57c568-8421-48db-9dab-6f3bbb18da11" /></td>
-    </tr>
-</table>
-
-### Colors
-
-Not a fan of white buttons and text? You have complete control to customize colors to perfectly reflect your style.
-
-<table>
-    <thead>
-        <tr>
-            <th>Colors</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><img width="1715" height="108" alt="modernz_colors_top" src="https://github.com/user-attachments/assets/b4f97def-df93-40ed-aa8e-d432e25c3230" /></td>
-        </tr>
-        <tr>
-            <td><img width="1715" height="188" alt="modernz_colors_bottom" src="https://github.com/user-attachments/assets/4a40bb0b-7d4a-429c-add4-43a9c8aa511b" /></td>
-        </tr>
-    </tbody>
-</table>
-
-See the [Color Customization](/docs/USER_OPTS.md#colors-and-style) section in the configuration guide for details on how to customize colors and buttons.
+`reduce_motion=yes` keeps the fades and drops the spring and scale animations.
 
 ## Installation
 
-1. **Disable Stock OSC**
-
-   - Add `osc=no` in your `mpv.conf`
-   - (OPTIONAL) Add `title-bar=no` in your `mpv.conf` for a clean look without the native window top bar
-
-2. **Copy Files**
-
-   - Place `modernz.lua` in your mpv `scripts` directory
-   - Place `modernz-icons.ttf` in your mpv `fonts` directory
-   - (OPTIONAL) Place `modernz-locale.json` in your mpv `script-opts` directory
-   - (OPTIONAL) Place `thumbfast.lua` in your mpv `scripts` directory
-
-3. **Locations**
-
-```
-Linux:   ~/.config/mpv/
-Windows: C:/Users/%username%/AppData/Roaming/mpv/
-macOS:   ~/Library/Application Support/mpv/
-```
-
-4. **Folder Structure** [[mpv manual](https://mpv.io/manual/master/#files)]
+**1. Copy the files** into your mpv folder:
 
 ```
 📁 mpv/
 ├── 📁 fonts/
-│   └── 📄 modernz-icons.ttf
+│   ├── Inter-Medium.ttf
+│   └── Inter-SemiBold.ttf
 ├── 📁 script-opts/
-│   ├── 📄 modernz.conf
-│   └── 📄 modernz-locale.json (optional)
+│   ├── modernz.conf        (optional, all options with their defaults)
+│   └── thumbz.conf         (optional)
 └── 📁 scripts/
-    ├── 📄 modernz.lua
-    └── 📄 thumbfast.lua (optional)
+    ├── modernz.lua
+    └── thumbz.lua
 ```
+
+| System  | mpv folder                                |
+| ------- | ----------------------------------------- |
+| Windows | `%APPDATA%\mpv\`                          |
+| macOS   | `~/Library/Application Support/mpv/`      |
+| Linux   | `~/.config/mpv/`                          |
+
+**2. Add to `mpv.conf`:**
+
+```ini
+osc=no                        # turn off mpv's own controls
+vo=gpu-next                   # needed for the frosted glass
+video-sync=display-resample   # animations at your display's refresh rate, not the video's
+```
+
+That's it. Optionally add `border=no` for a frameless window with glass window controls.
+
+> [!NOTE]
+> Without `vo=gpu-next` the glass is drawn as tinted panels without the frosted backdrop.
+
+### Upgrading from ModernZ
+
+ModernGlass keeps ModernZ's file names, options and script bindings, so it replaces `modernz.lua` in place and your `modernz.conf` and `input.conf` keep working. The icons are drawn by the script now, so `modernz-icons.ttf` is no longer needed. thumbz replaces thumbfast; remove `thumbfast.lua` if you have it.
 
 ## Configuration
 
-- Place `modernz.conf` in the `/script-opts` folder to customize settings
+Put `modernz.conf` in `script-opts`. It lists every option with its default, or you can write only the ones you change:
 
-   - You could download `modernz.conf` with all the default options
+```ini
+# glass
+glass_opacity=40
+panel_max_width=1400
 
-- Alternatively, you can create a short configuration of the options you want changed only:
-
-```EditorConfig
-# Short configuration example
-# Seekbar color (hex format)
-seekbarfg_color=#B7410E
-
-# Interface options
-speed_button=yes
-title=${media-title}
-icon_theme=fluent
-icon_style=outline
+# controls: blue progress instead of white, file name as the title
+seekbarfg_color=#0A84FF
+title=${filename}
 ```
 
-For a full list of options, [check out the detailed list here](/docs/USER_OPTS.md).
+The glass options at a glance:
+
+| Option | Default | What it does |
+| --- | --- | --- |
+| `glass_color` | `#17181C` | tint of the glass |
+| `glass_opacity` | `30` | clear (`0`) to solid (`100`) |
+| `glass_blur` | `yes` | frost the video behind the glass |
+| `glass_refraction` | `yes` | lens edges and rim light |
+| `glass_shadow` | `yes` | soft adaptive shadow |
+| `panel_radius` | `28` | corner radius of the panel |
+| `panel_max_width` | `0` | widest the panel gets (`0` = full width) |
+| `vidscale_max` | `1.35` | size of the controls on large displays |
+
+The full list is in the [options guide](docs/USER_OPTS.md). Other layouts from ModernZ (`classic`, `compact`, `mini`, `seekbar`) are still available with `layout=`.
 
 ## Controls
 
-### Button Interactions
+Left click does a button's main action, right click its secondary one, and middle click (or <kbd>Shift</kbd>+click) an alternative. Every interaction is listed in the [controls guide](docs/CONTROLS.md).
 
-- Left click: Primary action
-- Right click: Secondary action
-- Middle click/Shift+Left click: Alternative action
-
-> [!NOTE]
-> Middle clicking performs the same function as `Shift+left mouse button`, allowing for one-handed use
-
-For a full list of interactions, check out the [Button Interactions Guide](/docs/CONTROLS.md).
-
-### Keybinds
-
-ModernZ doesn't set keybinds by default to avoid interfering with your current setup. You can add keybinds in `input.conf` if you prefer:
+ModernGlass sets no keyboard shortcuts of its own. These can be added to `input.conf`:
 
 ```
-v   script-binding modernz/visibility              # Cycle visibility modes
-V   script-message-to modernz osc-visibility cycle # Set a visibility mode: cycle, auto, always, never
-w   script-binding modernz/progress-toggle         # Toggle persistent progress
-x   script-message-to modernz osc-show             # Show OSC
-y   script-message-to modernz osc-hide             # Hide OSC
-z   script-message-to modernz osc-idlescreen       # Toggle idle screen
+v   script-binding modernz/visibility              # cycle visibility modes
+w   script-binding modernz/progress-toggle         # toggle persistent progress
+x   script-message-to modernz osc-show             # show the controls
+y   script-message-to modernz osc-hide             # hide the controls
 ```
 
 ## Translations
 
-ModernZ is currently available in English, but you can easily switch it to your preferred language! Here's how:
-
-1. **Download the locale pack**
-
-Grab the [modernz-locale.json](/extras/locale/modernz-locale.json) file from this repository. This file holds translations for various languages.
-
-2. **Add the locales to mpv**
-
-Copy the downloaded `modernz-locale.json` file to your mpv `/script-opts` folder.
-
-3. **Choose your language**
-
-Adjust or add the `language` option in your `modernz.conf` to your preferred language.
-
-```EditorConfig
-# Example configuration in modernz.conf
-# Set language to Simplified Chinese
-language=zh
-```
-
-**Need More Info?**
-
-For a complete list of available languages, contribution guidelines, and in-depth translation documentation, head over to the [TRANSLATIONS.md](/docs/TRANSLATIONS.md).
+Put [`modernz-locale.json`](extras/locale/modernz-locale.json) in `script-opts` and set `language=` in `modernz.conf`, for example `language=zh`. Available languages and how to add one are in the [translations guide](docs/TRANSLATIONS.md).
 
 ## Extras
 
-The following scripts are maintained by me. Feel free to use them if they're useful to you.
+The [extra scripts](extras/) from ModernZ work with ModernGlass too: Open-File, Pause-Indicator-Lite and PiP-Lite.
 
-- [Open-File](/extras/open-file/) - Open files, add subtitles, or add audio tracks directly from mpv via the Windows file dialog
-- [Pause-Indicator-Lite](/extras/pause-indicator-lite) - A simple script that displays an indicator on pause
-- [PiP-Lite](/extras/pip-lite) - Add a PiP mode (Picture-in-Picture) via the ModernZ pin button or when `ontop` is enabled
-- [ytdlAutoFormat](https://github.com/Samillion/mpv-ytdlautoformat) - A simple mpv script to automatically change `ytdl-format` (yt-dlp) for specified domains
-- [BoxtoWide](https://github.com/Samillion/mpv-boxtowide) - A simple mpv script to change the aspect-ratio of video files/streams to a specific target ratio automatically
+## Credits
 
-For even more useful scripts, check out the [mpv User Scripts Wiki](https://github.com/mpv-player/mpv/wiki/User-Scripts). It offers a wide range of community-contributed scripts to enhance your mpv experience.
-
-## History
+ModernGlass is built on [ModernZ](https://github.com/Samillion/ModernZ) by Samillion, which keeps a long line of mpv interfaces alive:
 
 - [Samillion/ModernZ](https://github.com/Samillion/ModernZ)
   - forked from [dexeonify/ModernX](https://github.com/dexeonify/mpv-config/blob/main/scripts/modernx.lua)
     - forked from [cyl0/ModernX](https://github.com/cyl0/ModernX)
       - forked from [maoiscat/mpv-osc-modern](https://github.com/maoiscat/mpv-osc-modern)
+- [mpv](https://github.com/mpv-player/mpv) and its [osc.lua](https://github.com/mpv-player/mpv/blob/master/player/lua/osc.lua), which all of these are based on
+- [Inter](https://rsms.me/inter/) by Rasmus Andersson, [SIL Open Font License 1.1](fonts/Inter-LICENSE.txt)
+- [Fluent System Icons](https://github.com/microsoft/fluentui-system-icons) by Microsoft ([MIT](https://github.com/microsoft/fluentui-system-icons?tab=MIT-1-ov-file#readme)) and [Material Symbols](https://github.com/google/material-design-icons) by Google ([Apache 2.0](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file#readme))
 
-**Why fork yet again?**
+The scenes in the screenshots are generated and free to reuse.
 
-- Add extensive feature support, including [color customization](/docs/USER_OPTS.md#colors-and-style), advanced [options](/docs/USER_OPTS.md), and [locale integration](/docs/TRANSLATIONS.md)
-- Integrate mpv's `console` and `select` functionality to OSC
-  - An approach that later inspired adoption in mpv’s stock OSC ([#1](https://github.com/mpv-player/mpv/pull/15016), [#2](https://github.com/mpv-player/mpv/pull/15031))
-- Introduce a dedicated layout optimized for image viewing. [details](/docs/IMAGE_VIEWER.md)
-- Add `modern` and `modern-compact` layouts and icon themes support
-- Refactor the project to align with mpv’s stock OSC standards, ensuring long-term compatibility
-- Remove legacy bugs and redundant code to improve maintainability and stability
-  - This enables other `Modern` forks to build on ModernZ as a foundation
-    - Such as [zydezu/ModernX](https://github.com/zydezu/ModernX) ([reference](https://github.com/zydezu/ModernX/releases/tag/0.3.9))
+## License
 
-In essence, to maintain and revive the `modern-osc` origin.
-
-Having said that, ModernZ still uses parts of the old code, and every previous and current fork author and contributor deserves credit (including mpv's stock osc), which is why they are mentioned in detail.
-
-#### Credits:
-
-- [Material Symbols](https://github.com/google/material-design-icons) by Google — [Apache 2.0](https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file#readme)
-- [Fluent System Icons](https://github.com/microsoft/fluentui-system-icons) by Microsoft — [MIT](https://github.com/microsoft/fluentui-system-icons?tab=MIT-1-ov-file#readme) *(some icons modified or created to suit the OSC's needs)*
-- [mpv](https://github.com/mpv-player/mpv) and their [osc.lua](https://github.com/mpv-player/mpv/blob/master/player/lua/osc.lua), as ModernZ osc was re-based on the stock osc standards and applies updates from it
-- All modern osc origin and their forks as mentioned in [history](#history)
-- All [contributors](https://github.com/Samillion/ModernZ/graphs/contributors), testers and users that helped directly or indirectly with ModernZ osc ❤️
-
-## HH-AA
-
-<table>
-  <tr>
-    <td>
-      - In quiet memory, always.<br>
-      - Somewhere beyond time, we'll meet again.
-  </td>
-  </tr>
-  <tr>
-    <td>
-      <img width="973" height="309" alt="c7dbd158" src="https://github.com/user-attachments/assets/416388f1-6b3f-4e9f-8be4-2364f8aa0c96" />
-    </td>
-  </tr>
-</table>
+[LGPL-2.1](LICENSE), like mpv's osc.lua that ModernGlass derives from. The Inter font files are under the [SIL Open Font License 1.1](fonts/Inter-LICENSE.txt).
