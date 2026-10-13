@@ -40,6 +40,7 @@ ModernGlass currently includes translations for the following languages:
   - Used as a base and fallback for any missing phrases
 - Arabic (`ar`)
 - Danish (`dk`)
+- Dutch (`nl`)
 - English (`en`)
   - Same as Default (`default`)
   - Can be customized in `modernz-locale.json`
