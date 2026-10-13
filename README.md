@@ -33,7 +33,7 @@
 - **Glass panel.** The playback controls sit on a floating panel with rounded corners. With `vo=gpu-next`, a shader blurs the video behind the panel, distorts it slightly near the edges, adds a highlight along the top edge and draws a shadow under the panel.
 - **Brightness adjustment.** Over bright video the panel is darkened and its shadow is made stronger, so white text and icons stay readable.
 - **Menus.** The audio, subtitle, playlist, chapter, speed and audio output lists open as menus above their buttons. The ⋯ button opens a menu with playback speed, chapters, audio output, loop, keep on top, screenshot and statistics.
-- **Thumbnails.** thumbz shows a preview frame above the seekbar while you hover it. Frames are decoded by a separate mpv process in the background and cached for the current file. HDR video is tone-mapped.
+- **Thumbnails.** thumbz shows a preview frame above the seekbar while you hover it. See [Thumbnails](#thumbnails) for how it works and how it compares to thumbfast.
 - **Size.** The controls scale with the window up to a maximum size (`vidscale_max`), which is multiplied by the system's display scaling. On large monitors they stay the size they have on a 1080p screen.
 - **Accessibility options.** `glass_reduce_transparency` makes the panels nearly opaque, `glass_increase_contrast` makes them black with a visible border, and `reduce_motion` turns off the spring and scale animations.
 - **GPU use.** The blur is computed on a copy of the frame scaled down to 270 rows, and the shader is turned off while the controls are hidden.
@@ -87,6 +87,29 @@
 </table>
 
 `reduce_motion=yes` turns off the spring and scale animations. Fades are kept.
+
+## Thumbnails
+
+<p align="center">
+  <img src="assets/thumbz-vs-thumbfast.gif" alt="thumbfast and thumbz side by side during the same seekbar movements" width="100%">
+</p>
+
+thumbz is the seekbar thumbnailer included with ModernGlass. It runs a second mpv in the background that decodes frames and scales them to thumbnail size.
+
+- When the controls appear, it starts rendering keyframe thumbnails spread across the whole file. The ticks on the bar in the animation above are those thumbnails.
+- While the pointer moves, it shows the closest finished thumbnail and renders keyframes near the pointer. When the pointer stops, it renders the exact frame.
+- Finished thumbnails are kept for the current file, so returning to a position needs no new decoding.
+- It decodes with the player's hardware decoding setting (`hwdec`) and skips the loop filter, which makes no visible difference at thumbnail size. HDR video is tone-mapped.
+
+The animation replays a test with thumbfast and thumbz in their default settings: the same 5-minute 1080p H.264 video (a keyframe every 10 seconds) and the same pointer movements, sent to each one. Both decoded in software on a 2-core machine. Median of three runs:
+
+| | thumbfast | thumbz |
+| --- | --- | --- |
+| First thumbnail after the pointer reaches the seekbar | 0.19 s | 0.00 s |
+| Distance between the shown frame and the pointer during the first sweep | 11.1 s | 5.3 s |
+| Time without a thumbnail during the first sweep | 7% | 1% |
+| Exact frame after the pointer stops | 0.30 s | 0.26 s |
+| CPU time used during the test | 7.8 s | 6.9 s |
 
 ## Installation
 

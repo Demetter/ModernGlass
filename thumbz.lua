@@ -6,7 +6,7 @@
       BGRA images; they are shown with overlay-add. A short Lua scheduler runs inside
       the renderer, so requests are handled there without round trips.
 
-      * Storyboard: from the first seekbar hover on, the renderer pre-renders keyframe
+      * Storyboard: from the moment the controls appear, the renderer pre-renders keyframe
         thumbnails across the whole file in idle moments, coarse to fine, so the bar
         fills in evenly. Any hover then shows the nearest one immediately.
       * Cache: every rendered thumbnail stays on disk for the current file, so
@@ -43,7 +43,7 @@ local o = {
     precise = "yes",          -- exact frame once the pointer rests: yes, auto (only if the keyframe is far off), no
     rest_delay = 0.05,        -- seconds the pointer must rest before the exact frame is rendered
     exact_below = 30,         -- files shorter than this many seconds always use exact frames
-    storyboard = 120,         -- thumbnails pre-rendered across the file once the seekbar is hovered (0 = off)
+    storyboard = 120,         -- thumbnails pre-rendered across the file once the controls appear (0 = off)
     storyboard_gap = 5,       -- at least this many seconds between storyboard thumbnails
     cache_size = 200,         -- thumbnails kept on disk for the current file (minimum 2)
     hwdec = "auto",           -- renderer decoding: auto (same hardware decoder as the player), no, or an mpv --hwdec value
@@ -1095,9 +1095,15 @@ local function hide()
 end
 
 local function prepare()
-    if disabled or spawned then return end
+    if disabled then return end
     interest = mp.get_time()
-    spawn(mp.get_property_number("time-pos", 0) or 0)
+    if not spawned then spawn(mp.get_property_number("time-pos", 0) or 0) end
+    -- the pointer is on its way to the seekbar: fill in the bar meanwhile
+    storyboard_start()
+    if spawned and alive and next(jobs) == nil then
+        pump()
+        if next(jobs) ~= nil then poll_timer:resume() end
+    end
 end
 
 ------------------------------------------------------------------------------
