@@ -221,15 +221,15 @@ local user_opts = {
 
     -- glass look (layout=default panel, menus, tooltips, thumbnails, window controls)
     glass_color = "#17181C",               -- tint of glass surfaces
-    glass_opacity = 30,                    -- tint strength in percent, from clear (0) to solid (100); at least 62 when the video behind can't be frosted
-    glass_border_opacity = 14,             -- opacity of the hairline light edge around glass surfaces in percent
+    glass_opacity = 14,                    -- tint strength in percent, from clear (0) to solid (100); at least 62 when the video behind can't be frosted
+    glass_border_opacity = 8,              -- opacity of the hairline light edge around glass surfaces in percent
     glass_shadow = true,                   -- soft shadow under glass surfaces
     glass_blur = true,                     -- blur the video behind glass surfaces (needs vo=gpu-next)
-    glass_refraction = true,               -- distort the video near the edges of glass surfaces and add a highlight along the top edge (with glass_blur)
+    glass_refraction = true,               -- bend the video near the rounded edges of glass surfaces like a lens and light their rims (with glass_blur)
     glass_reduce_transparency = false,     -- frosty, nearly opaque glass
     glass_increase_contrast = false,       -- black glass with a visible border
     reduce_motion = false,                 -- no spring and scale animations (fades stay)
-    panel_radius = 28,                     -- corner radius of the floating panel
+    panel_radius = 34,                     -- corner radius of the floating panel
     panel_margin = 20,                     -- distance between the floating panel and the window edges
     panel_max_width = 0,                   -- widest the floating panel gets (0 = always full width)
     muted_text_color = "#AEB7C4",          -- secondary text: duration, chapter title, menu details
@@ -817,6 +817,10 @@ local language = {
         up_one_level = "Up one level",
         nothing_here = "Nothing to play here",
         playing = "Playing",
+        play = "Play",
+        pause = "Pause",
+        replay = "Replay",
+        quit = "Quit",
     },
 }
 
@@ -1471,6 +1475,7 @@ end
 
 -- draw a glass rounded rectangle; opts: fade (extra alpha 0-255), fill_alpha,
 -- edge_alpha, shadow (false to skip), shadow_alpha, shadow_blur, shadow_y, color
+local glass_lit
 local function glass_rect(ass, x, y, w, h, r, opts)
     opts = opts or {}
     local fade = opts.fade or 0
@@ -1496,7 +1501,7 @@ local function glass_rect(ass, x, y, w, h, r, opts)
         ass:round_rect_ccw(e, e, w - e, h - e, math.max(0, r - e))
         ass:draw_stop()
         -- the light catching the top of the edge, fading down the corners
-        if opts.rim ~= false and not glass_look.contrast then
+        if opts.rim ~= false and not glass_look.contrast and not glass_lit() then
             local cut = math.min(r, h / 2)
             for _, band in ipairs({{y - 2, y + cut * 0.5, 0x8C}, {y + cut * 0.5, y + cut, 0xC4}}) do
                 event(string.format("\\blur0.5\\1c&HFFFFFF&\\1a&H%X&\\clip(%f,%f,%f,%f)", mult_alpha(band[3], fade),
@@ -1572,6 +1577,9 @@ local GLASS_SHADER = [==[
 //!PARAM mzg_0a
 //!TYPE DYNAMIC float
 1.0
+//!PARAM mzg_0f
+//!TYPE DYNAMIC float
+0.0
 //!PARAM mzg_1x
 //!TYPE DYNAMIC float
 0.0
@@ -1590,6 +1598,9 @@ local GLASS_SHADER = [==[
 //!PARAM mzg_1a
 //!TYPE DYNAMIC float
 1.0
+//!PARAM mzg_1f
+//!TYPE DYNAMIC float
+0.0
 //!PARAM mzg_2x
 //!TYPE DYNAMIC float
 0.0
@@ -1608,6 +1619,9 @@ local GLASS_SHADER = [==[
 //!PARAM mzg_2a
 //!TYPE DYNAMIC float
 1.0
+//!PARAM mzg_2f
+//!TYPE DYNAMIC float
+0.0
 //!PARAM mzg_3x
 //!TYPE DYNAMIC float
 0.0
@@ -1626,6 +1640,9 @@ local GLASS_SHADER = [==[
 //!PARAM mzg_3a
 //!TYPE DYNAMIC float
 1.0
+//!PARAM mzg_3f
+//!TYPE DYNAMIC float
+0.0
 
 //!HOOK OUTPUT
 //!BIND HOOKED
@@ -1656,11 +1673,12 @@ vec4 hook() {
 //!WHEN mzg_on
 //!DESC [ModernZ] glass: horizontal blur
 vec4 hook() {
-    // gaussian, sigma 6 texels (about 24 px at 1080p), as 19 bilinear taps
-    const float w[10] = float[](0.06663, 0.12873, 0.11215, 0.08749, 0.06113, 0.03824, 0.02143, 0.01075, 0.00483, 0.00194);
-    const float o[10] = float[](0.0, 1.4896, 3.4757, 5.4619, 7.4481, 9.4344, 11.4208, 13.4073, 15.3940, 17.3808);
+    // gaussian, sigma 3 texels (about 12 px at 1080p), as 11 bilinear taps: frosted lightly,
+    // so the picture stays recognizable through the clear glass
+    const float w[6] = float[](0.13304, 0.23238, 0.13539, 0.05118, 0.01254, 0.00199);
+    const float o[6] = float[](0.0, 1.4584, 3.4040, 5.3518, 7.3029, 9.2582);
     vec4 c = MZG_A_tex(MZG_A_pos) * w[0];
-    for (int i = 1; i < 10; i++) {
+    for (int i = 1; i < 6; i++) {
         vec2 d = vec2(o[i] * MZG_A_pt.x, 0.0);
         c += (MZG_A_tex(MZG_A_pos + d) + MZG_A_tex(MZG_A_pos - d)) * w[i];
     }
@@ -1675,10 +1693,10 @@ vec4 hook() {
 //!WHEN mzg_on
 //!DESC [ModernZ] glass: vertical blur
 vec4 hook() {
-    const float w[10] = float[](0.06663, 0.12873, 0.11215, 0.08749, 0.06113, 0.03824, 0.02143, 0.01075, 0.00483, 0.00194);
-    const float o[10] = float[](0.0, 1.4896, 3.4757, 5.4619, 7.4481, 9.4344, 11.4208, 13.4073, 15.3940, 17.3808);
+    const float w[6] = float[](0.13304, 0.23238, 0.13539, 0.05118, 0.01254, 0.00199);
+    const float o[6] = float[](0.0, 1.4584, 3.4040, 5.3518, 7.3029, 9.2582);
     vec4 c = MZG_B_tex(MZG_B_pos) * w[0];
-    for (int i = 1; i < 10; i++) {
+    for (int i = 1; i < 6; i++) {
         vec2 d = vec2(0.0, o[i] * MZG_B_pt.y);
         c += (MZG_B_tex(MZG_B_pos + d) + MZG_B_tex(MZG_B_pos - d)) * w[i];
     }
@@ -1699,20 +1717,22 @@ float mzg_box(vec2 p, float x, float y, float w, float h, float r) {
     return length(max(q, 0.0)) + min(max(q.x, q.y), 0.0) - rad;
 }
 
-// distance to the nearest surface; its opacity (it may be fading in or out) goes to a
-float mzg_sdf_a(vec2 p, out float a) {
+// distance to the nearest surface; its opacity (it may be fading in or out) goes to a,
+// its frost to f
+float mzg_sdf_a(vec2 p, out float a, out float f) {
     float d = 1e6, k;
     a = 1.0;
-    if (mzg_0w > 0.0) { k = mzg_box(p, mzg_0x, mzg_0y, mzg_0w, mzg_0h, mzg_0r); if (k < d) { d = k; a = mzg_0a; } }
-    if (mzg_1w > 0.0) { k = mzg_box(p, mzg_1x, mzg_1y, mzg_1w, mzg_1h, mzg_1r); if (k < d) { d = k; a = mzg_1a; } }
-    if (mzg_2w > 0.0) { k = mzg_box(p, mzg_2x, mzg_2y, mzg_2w, mzg_2h, mzg_2r); if (k < d) { d = k; a = mzg_2a; } }
-    if (mzg_3w > 0.0) { k = mzg_box(p, mzg_3x, mzg_3y, mzg_3w, mzg_3h, mzg_3r); if (k < d) { d = k; a = mzg_3a; } }
+    f = 0.0;
+    if (mzg_0w > 0.0) { k = mzg_box(p, mzg_0x, mzg_0y, mzg_0w, mzg_0h, mzg_0r); if (k < d) { d = k; a = mzg_0a; f = mzg_0f; } }
+    if (mzg_1w > 0.0) { k = mzg_box(p, mzg_1x, mzg_1y, mzg_1w, mzg_1h, mzg_1r); if (k < d) { d = k; a = mzg_1a; f = mzg_1f; } }
+    if (mzg_2w > 0.0) { k = mzg_box(p, mzg_2x, mzg_2y, mzg_2w, mzg_2h, mzg_2r); if (k < d) { d = k; a = mzg_2a; f = mzg_2f; } }
+    if (mzg_3w > 0.0) { k = mzg_box(p, mzg_3x, mzg_3y, mzg_3w, mzg_3h, mzg_3r); if (k < d) { d = k; a = mzg_3a; f = mzg_3f; } }
     return d;
 }
 
 float mzg_sdf(vec2 p) {
-    float a;
-    return mzg_sdf_a(p, a);
+    float a, f;
+    return mzg_sdf_a(p, a, f);
 }
 
 vec4 hook() {
@@ -1720,48 +1740,64 @@ vec4 hook() {
     vec4 c = HOOKED_tex(HOOKED_pos);
     vec2 p = HOOKED_pos * HOOKED_size;
     float u = max(mzg_unit * HOOKED_size.y, 0.25); // pixels per ModernZ layout unit
-    float alpha;
-    float d = mzg_sdf_a(p, alpha);
+    float alpha, frost;
+    float d = mzg_sdf_a(p, alpha, frost);
     if (d > 48.0 * u)
         return c;
 
     if (d > 0.0) {
-        // the shadow the glass casts: soft, and deeper over bright pictures
+        // the shadow the glass casts: wide, soft, and a little deeper over bright pictures
         if (mzg_shadow > 0.0) {
-            float sa;
-            float ds = max(mzg_sdf_a(p - vec2(0.0, 6.0 * u), sa), 0.0) / (14.0 * u);
+            float sa, sf;
+            float ds = max(mzg_sdf_a(p - vec2(0.0, 8.0 * u), sa, sf), 0.0) / (18.0 * u);
             float under = dot(MZG_C_tex(HOOKED_pos).rgb, luma);
-            float k = mzg_shadow * sa * mix(0.10, 0.26, smoothstep(0.15, 0.85, under));
+            float k = mzg_shadow * sa * mix(0.05, 0.13, smoothstep(0.15, 0.85, under));
             c.rgb *= 1.0 - k * exp(-0.5 * ds * ds);
         }
         if (d >= 0.5)
             return c;
     }
 
-    // outward normal of the nearest edge, and how close to that edge we are
+    // outward normal of the nearest edge
     vec2 nx = vec2(1.0, 0.0);
     vec2 n = vec2(mzg_sdf(p + nx.xy) - mzg_sdf(p - nx.xy), mzg_sdf(p + nx.yx) - mzg_sdf(p - nx.yx));
     n = dot(n, n) > 1e-8 ? normalize(n) : vec2(0.0, -1.0);
-    float rim = clamp(1.0 + min(d, 0.0) / (14.0 * u), 0.0, 1.0); // 1 at the edge, 0 inside
 
-    // lensing: the thick edge bends the picture inward; the middle stays undistorted
-    float bend = mzg_lens * 7.0 * u * rim * rim;
+    // a slab whose edge rounds off like a lens: near the rim it takes the picture from
+    // further inside and squeezes it toward the edge; the middle stays true
+    float e = clamp(1.0 + min(d, 0.0) / (20.0 * u), 0.0, 1.0); // 1 at the edge, 0 inside
+    float slope = e / sqrt(max(1.0 - e * e, 0.05));
+    // it materializes: the bending and the light grow in with it
+    float bend = alpha * mzg_lens * 3.2 * u * slope;
     vec2 q = clamp((p - n * bend) / HOOKED_size, vec2(0.0), vec2(1.0));
-    vec3 frost = MZG_C_tex(q).rgb;
-    vec3 g = mix(frost, HOOKED_tex(q).rgb, mzg_lens * 0.55 * rim * rim * rim);
+    vec3 g = MZG_C_tex(q).rgb;
+    // menus are regular glass, frostier than the clear controls: a ring of taps widens the blur
+    if (frost > 0.0) {
+        vec3 ring = vec3(0.0);
+        for (int i = 0; i < 8; i++) {
+            float an = 0.7854 * float(i) + 0.3927;
+            ring += MZG_C_tex(q + vec2(cos(an), sin(an)) * 4.5 * MZG_C_pt).rgb;
+        }
+        g = mix(g, (g + ring) / 9.0, frost);
+    }
 
-    // vibrancy, like backdrop-filter: saturate(170%)
+    // vibrancy
     float l = dot(g, luma);
-    g = clamp(mix(vec3(l), g, 1.7), 0.0, 1.0);
+    g = clamp(mix(vec3(l), g, 1.35), 0.0, 1.0);
 
-    // adaptive tone: brighter pictures get deeper glass, so white controls stay readable
-    float under = dot(frost, luma);
-    g *= 1.0 - mzg_tone * 0.5 * smoothstep(0.35, 1.0, under);
+    // legibility: the brighter the picture around it, the deeper the glass (measured over an
+    // area, so a bright spot stays brighter than what is around it); dark ones a faint lift
+    vec2 o = 10.0 * MZG_C_pt;
+    float under = dot(MZG_C_tex(q).rgb + MZG_C_tex(q + vec2(o.x, 0.0)).rgb + MZG_C_tex(q - vec2(o.x, 0.0)).rgb
+                      + MZG_C_tex(q + vec2(0.0, o.y)).rgb + MZG_C_tex(q - vec2(0.0, o.y)).rgb, luma) / 5.0;
+    g = g * (1.0 - mzg_tone * 0.52 * smoothstep(0.30, 1.0, under)) + mzg_tone * 0.035 * (1.0 - under);
 
-    // specular: a light above the viewer catches the top of the rim, a faint bounce the bottom
-    float top = max(dot(n, vec2(-0.30, -0.954)), 0.0);
-    float bottom = max(dot(n, vec2(0.30, 0.954)), 0.0);
-    g += mzg_lens * (0.16 * top * top + 0.05 * bottom * bottom) * pow(rim, 7.0);
+    // light: a hairline along the rim, brightest where it faces the light (upper left) and
+    // where the light leaves again (lower right), and a soft glow across the rounded edge
+    float f = dot(n, vec2(-0.6, -0.8));
+    float lit = 0.25 + 0.75 * max(f, 0.0) * max(f, 0.0) + 0.45 * max(-f, 0.0) * max(-f, 0.0);
+    float line = exp(-2.0 * (d + 0.8) * (d + 0.8));
+    g += alpha * mzg_lens * lit * (0.75 * line + 0.12 * e * e * e);
 
     float m = clamp(0.5 - d, 0.0, 1.0) * mzg_strength * alpha;
     return vec4(mix(c.rgb, g, m), c.a);
@@ -1807,7 +1843,8 @@ local function glass_blur_install()
     end
 end
 
--- rects: {x, y, w, h, r, opacity} in OSC coordinates; an empty list turns the blur off
+-- rects: {x, y, w, h, r, opacity, frosted} in OSC coordinates (frosted: regular glass, for
+-- menus); an empty list turns the blur off
 local function glass_blur_update(rects)
     if glass_blur.path == nil or glass_blur.failed then return end
     if glass_blur.suspended or not glass_blur_active() then rects = {} end
@@ -1833,6 +1870,7 @@ local function glass_blur_update(rects)
                 kv[p .. "h"] = string.format("%.5f", r[4] * sy / vh)
                 kv[p .. "r"] = string.format("%.5f", r[5] * sy / vh)
                 kv[p .. "a"] = string.format("%.2f", r[6] or 1)
+                kv[p .. "f"] = r[7] and "1" or "0"
             else
                 kv[p .. "w"] = "0"
             end
@@ -1912,6 +1950,11 @@ local function rrect_clip(x, y, w, h, r)
 end
 
 -- how opaque glass surfaces are: lighter when the video behind them is blurred
+-- the shader draws the light along the rims of glass surfaces
+glass_lit = function()
+    return glass_blur_active() and glass_look.refraction
+end
+
 local function glass_fill_alpha(min_opacity)
     local opacity = glass_look.opacity
     if not glass_blur_active() then opacity = math.max(opacity, 62) end
@@ -2321,6 +2364,22 @@ local function get_seekbar_handle_pos(element)
         if is_active then
             handle_radius = handle_radius * (user_opts.slider_hover_size / 100)
             handle_x = limit_range(handle_radius, elem_geo.w - handle_radius, handle_x)
+        end
+        -- on glass the sliders are thumbless at rest, like a progress bar: the knob grows
+        -- in while the pointer is on the slider or drags it
+        if state.glass_ui then
+            local st = element.state
+            local want = (mouse_hit(element) or st.handle_drag) and 1 or 0
+            local now = mp.get_time()
+            if st.knob == nil or not glass_look.motion then
+                st.knob = want
+            elseif st.knob ~= want then
+                local step = (now - st.knob_t) / 0.15
+                st.knob = want > st.knob and math.min(1, st.knob + step) or math.max(0, st.knob - step)
+                request_tick()
+            end
+            st.knob_t = now
+            handle_radius = handle_radius * ease_out(st.knob)
         end
         return handle_x, handle_radius, is_active
     end
@@ -2979,7 +3038,7 @@ local menu_frame = 0      -- bumped once per render, so a menu's geometry is wor
 local close_menu, open_menu, render_menu, menu_event, menu_visual_rect, menu_covers_sync, menu_cover_ready
 do -- (in a block: the main chunk is close to Lua's limit of 200 locals)
 
-local MENU = {row_h = 32, sep_h = 9, header_h = 32, pad = 6, radius = 16, fs = 14, meta_fs = 12.5, title_fs = 12.5, glyph = 16, icon = 18}
+local MENU = {row_h = 32, sep_h = 9, header_h = 32, pad = 7, radius = 24, fs = 14, meta_fs = 12.5, title_fs = 12.5, glyph = 16, icon = 18}
 
 local lang_names = {
     en = "English", eng = "English", ja = "Japanese", jpn = "Japanese", es = "Spanish", spa = "Spanish",
@@ -3350,6 +3409,73 @@ local function menu_items(kind, arg)
             toggle({icon = glyph_of(icons.info), label = locale.stats_info,
                     action = function() mp.command(user_opts.info_mbtn_left_command) end})
         end
+    elseif kind == "context" then
+        -- the right-click menu: the panel's controls in a few groups
+        local group = false
+        local function add(item)
+            item.sep = group and #items > 0
+            group = false
+            items[#items + 1] = item
+        end
+        if not state.is_image then
+            local paused = state.pause and not state.eof_reached
+            add({icon = glyph_of(state.eof_reached and icons.replay or paused and icons.play or icons.pause),
+                 label = state.eof_reached and locale.replay or paused and locale.play or locale.pause,
+                 action = function()
+                     if state.eof_reached then
+                         mp.commandv("seek", 0, "absolute-percent")
+                         mp.commandv("set", "pause", "no")
+                     else
+                         mp.command(user_opts.play_pause_mbtn_left_command)
+                     end
+                 end})
+        end
+        group = true
+        local count = {audio = 0, sub = 0}
+        for _, t in ipairs(mp.get_property_native("track-list") or {}) do
+            if count[t.type] then count[t.type] = count[t.type] + 1 end
+        end
+        local function track_name(t)
+            return t and (lang_name(t.lang) or t.title or (locale.track .. " " .. t.id)) or locale.off
+        end
+        if count.audio > 1 then
+            add({icon = glyph_of(icons.audio), label = locale.audio, submenu = "audio",
+                 meta = track_name(mp.get_property_native("current-tracks/audio"))})
+        end
+        if count.sub > 0 then
+            add({icon = glyph_of(icons.subtitle), label = locale.subtitles, submenu = "sub",
+                 meta = track_name(mp.get_property_native("current-tracks/sub"))})
+        end
+        if not state.is_image then
+            add({icon = glyph_of(icons.speed), label = locale.speed_control, submenu = "speed",
+                 meta = speed_label(mp.get_property_number("speed", 1))})
+        end
+        local chapters = mp.get_property_native("chapter-list") or {}
+        if #chapters > 0 then
+            local ch = mp.get_property_number("chapter", -1)
+            add({icon = glyph_of(icons.chapters), label = locale.chapters, submenu = "chapter",
+                 meta = ch >= 0 and string.format("%d / %d", ch + 1, #chapters) or nil})
+        end
+        if state.playlist_count > 1 or dir then
+            add({icon = glyph_of(icons.playlist), label = locale.playlist, submenu = "playlist",
+                 meta = state.playlist_count > 1 and string.format("%d / %d", state.playlist_pos_1, state.playlist_count) or nil})
+        end
+        group = true
+        if not state.is_image then
+            add({icon = glyph_of(icons.loop_on), label = locale.loop, active = mp.get_property("loop-file") ~= "no",
+                 action = function() mp.command(user_opts.file_loop_mbtn_left_command) end})
+        end
+        add({icon = glyph_of(icons.ontop_on), label = locale.keep_on_top, active = state.ontop,
+             action = function() mp.command(user_opts.ontop_mbtn_left_command) end})
+        add({icon = glyph_of(icons.fullscreen), label = locale.fullscreen, active = state.fullscreen,
+             action = function() mp.command(user_opts.fullscreen_mbtn_left_command) end})
+        group = true
+        add({icon = glyph_of(icons.screenshot), label = locale.screenshot,
+             action = function() glass_blur.screenshot(user_opts.screenshot_mbtn_left_command) end})
+        add({icon = glyph_of(icons.info), label = locale.stats_info,
+             action = function() mp.command(user_opts.info_mbtn_left_command) end})
+        group = true
+        add({icon = glyph_of(icons.window.close), label = locale.quit, action = function() mp.commandv("quit") end})
     end
     return title, items, header
 end
@@ -3362,7 +3488,7 @@ local function menu_activate(index)
         local stack = {}
         for i = 1, #menu.stack - 1 do stack[i] = menu.stack[i] end
         local prev = menu.stack[#menu.stack]
-        open_menu(prev.kind, menu.anchor, {from_back = true, arg = prev.arg, scroll = prev.scroll, stack = stack})
+        open_menu(prev.kind, menu.anchor, {from_back = true, arg = prev.arg, scroll = prev.scroll, stack = stack, at = menu.at})
         return
     end
     local item = index == 0 and menu.header or menu.items[index]
@@ -3371,7 +3497,7 @@ local function menu_activate(index)
         local stack = {}
         for i, v in ipairs(menu.stack) do stack[i] = v end
         stack[#stack + 1] = {kind = menu.kind, arg = menu.arg, scroll = menu.scroll}
-        open_menu(item.submenu, menu.anchor, {back = true, arg = item.arg, stack = stack})
+        open_menu(item.submenu, menu.anchor, {back = true, arg = item.arg, stack = stack, at = menu.at})
         return
     end
     close_menu()
@@ -3434,7 +3560,8 @@ close_menu = function()
     request_tick()
 end
 
--- opts: back = kind of the menu this one was opened from (shows a back row)
+-- opts: back = kind of the menu this one was opened from (shows a back row), at = the
+-- pointer, for a menu that opens there instead of above a button
 open_menu = function(kind, anchor_name, opts)
     opts = opts or {}
     -- the same button again closes its menu (and any submenu opened from it)
@@ -3468,13 +3595,13 @@ open_menu = function(kind, anchor_name, opts)
     menu = {kind = kind, arg = opts.arg, stack = stack, title = title and esc(title) or nil, items = items,
             header = #stack == 0 and header or nil,
             covers = covers, row_h = covers and COVER_ROW_H or MENU.row_h,
-            anchor = anchor_name, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
+            anchor = anchor_name, at = opts.at, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
             -- going into a submenu or back: the card reshapes from the old one in place and
             -- the new rows slide in from the side they come from
             keep_x = had_menu and origin and origin.x or nil,
             from = had_menu and origin and {x = origin.x, y = origin.y, w = origin.w, h = origin.h} or nil,
             dir = opts.back and 1 or -1}
-    local rows = math.min(#items, math.max(3, user_opts.menu_max_items))
+    local rows = math.min(#items, kind == "context" and #items or math.max(3, user_opts.menu_max_items))
     menu.scroll = opts.scroll or math.max(0, math.min(#items - rows, active - math.ceil(rows / 2)))
     state.showtime = mp.get_time()
     request_tick()
@@ -3548,21 +3675,43 @@ local function menu_geometry(m)
     local lead = m.covers and (COVER_X + COVER_W + COVER_GAP + 2) or m.icons and 40 or 32
     local w = math.floor(math.max(200, math.min(widest + lead + 2 * MENU.pad + 18, math.min(440, W - 24))))
 
-    local ax, ay = W / 2, H - 120
-    for _, e in ipairs(elements) do
-        if e.name == m.anchor and e.hitbox then
-            ax = (e.hitbox.x1 + e.hitbox.x2) / 2
-            ay = e.hitbox.y1
-        end
-    end
-    local p = state.panel_rect
-    if p then ay = p.y1
-    elseif state.seekbar_element and state.seekbar_element.hitbox then ay = math.min(ay, state.seekbar_element.hitbox.y1) end
-    local bottom = ay - 10
-
     local header = m.title and MENU.header_h or MENU.pad
-    local avail = bottom - 12 - header - MENU.pad
-    local rows = math.min(#m.items, math.max(3, user_opts.menu_max_items), math.max(1, math.floor(avail / m.row_h)))
+    local at = m.at
+    local ax, ay, avail = W / 2, H - 120, nil
+    if at then
+        -- at the pointer, above the controls: below the pointer, or above it, or else as
+        -- low as it goes; to the right of it unless there's no room. The menus opened
+        -- from it keep the edge it was placed by.
+        local floor_y = H - 12
+        local p, sb = state.panel_rect, state.seekbar_element
+        if p then floor_y = p.y1 - 10
+        elseif sb and sb.hitbox then floor_y = sb.hitbox.y1 - 10 end
+        if at.up == nil then
+            local full = header + #m.items * m.row_h + MENU.pad
+            for _, item in ipairs(m.items) do
+                if item.sep then full = full + MENU.sep_h end
+            end
+            local y = math.min(at.y, floor_y)
+            at.up = full > floor_y - y
+            at.edge = (at.up and full > y - 12) and floor_y or y
+            at.left = at.x + w > W - 12
+        end
+        avail = (at.up and at.edge - 12 or floor_y - at.edge) - header - MENU.pad
+    else
+        for _, e in ipairs(elements) do
+            if e.name == m.anchor and e.hitbox then
+                ax = (e.hitbox.x1 + e.hitbox.x2) / 2
+                ay = e.hitbox.y1
+            end
+        end
+        local p = state.panel_rect
+        if p then ay = p.y1
+        elseif state.seekbar_element and state.seekbar_element.hitbox then ay = math.min(ay, state.seekbar_element.hitbox.y1) end
+        avail = ay - 10 - 12 - header - MENU.pad
+    end
+    -- the right-click menu shows all of its rows when they fit
+    local most = m.kind == "context" and #m.items or math.max(3, user_opts.menu_max_items)
+    local rows = math.min(#m.items, most, math.max(1, math.floor(avail / m.row_h)))
     local scrolls = #m.items > rows
     m.scroll = math.max(0, math.min(m.scroll, #m.items - rows))
     -- row offsets from the top of the list (separators only when the whole list shows)
@@ -3574,12 +3723,23 @@ local function menu_geometry(m)
         y = y + m.row_h
     end
     local h = header + y + MENU.pad
-    local left, right = 12, W - 12
-    if p then left, right = math.max(left, p.x1), math.min(right, p.x2) end
-    local x = m.keep_x or (ax - w / 2)
-    x = math.max(left, math.min(right - w, x))
-    m.geo = {x = x, y = bottom - h, w = w, h = h, rows = rows, ys = ys, top = bottom - h + header,
-                scrolls = scrolls, ax = math.max(x + MENU.radius, math.min(x + w - MENU.radius, ax))}
+    -- (ox, oy): the point it grows out of, the pointer or the top of its button
+    local x, top, ox, oy
+    if at then
+        x = math.max(12, math.min(W - 12 - w, at.left and at.x - w or at.x))
+        top = at.up and at.edge - h or at.edge
+        ox, oy = at.x, at.y
+    else
+        local p = state.panel_rect
+        local left, right = 12, W - 12
+        if p then left, right = math.max(left, p.x1), math.min(right, p.x2) end
+        x = m.keep_x or (ax - w / 2)
+        x = math.max(left, math.min(right - w, x))
+        top = ay - 10 - h
+        ox, oy = math.max(x + MENU.radius, math.min(x + w - MENU.radius, ax)), ay - 10
+    end
+    m.geo = {x = x, y = top, w = w, h = h, rows = rows, ys = ys, top = top + header,
+             scrolls = scrolls, ox = ox, oy = oy}
     m.geo_frame = menu_frame
     return m.geo
 end
@@ -3631,8 +3791,8 @@ menu_visual_rect = function(m)
     local g = menu_geometry(m)
     if not g then return nil end
     local mo = menu_motion(m, g)
-    local k, ox, oy = mo.k, g.ax, g.y + g.h
-    return {ox + (mo.x - ox) * k, oy + (mo.y - oy) * k, mo.w * k, mo.h * k, MENU.radius * k, 1 - mo.fade / 255}
+    local k, ox, oy = mo.k, g.ox, g.oy
+    return {ox + (mo.x - ox) * k, oy + (mo.y - oy) * k, mo.w * k, mo.h * k, MENU.radius * k, 1 - mo.fade / 255, true}
 end
 
 render_menu = function(master_ass, m)
@@ -3645,8 +3805,8 @@ render_menu = function(master_ass, m)
     local mo = menu_motion(m, g)
     if not mo.done then request_tick() end
     local k, fade, cfade = mo.k, mo.fade, mo.cfade
-    -- grow out of the button: everything scales around the anchor point
-    local ox, oy = g.ax, g.y + g.h
+    -- grow out of the button or the pointer: everything scales around that point
+    local ox, oy = g.ox, g.oy
     local function X(x) return ox + (x - ox) * k end
     local function Y(y) return oy + (y - oy) * k end
     local function XC(x) return X(x + mo.slide) end  -- content (slides in from a submenu)
@@ -3662,7 +3822,7 @@ render_menu = function(master_ass, m)
     end
 
     glass_rect(ass, X(mo.x), Y(mo.y), mo.w * k, mo.h * k, MENU.radius * k, {
-        fade = fade, fill_alpha = glass_fill_alpha(glass_blur_active() and 48 or 86),
+        fade = fade, fill_alpha = glass_fill_alpha(glass_blur_active() and 36 or 86),
         shadow = not (glass_blur_active() and user_opts.glass_shadow),
         shadow_blur = 22, shadow_y = 10, shadow_alpha = 0xB0})
 
@@ -3833,7 +3993,9 @@ menu_event = function(source, what)
     elseif what == "up" then
         if menu.dismiss then
             close_menu()
-        elseif source == "mbtn_left" then
+            -- a right click elsewhere opens the right-click menu there
+            if source == "mbtn_right" then open_menu("context", nil, {at = {x = mx, y = my}}) end
+        elseif source == "mbtn_left" or (source == "mbtn_right" and menu.at) then
             local row = menu_row_at(mx, my)
             if row and row == menu.pressed then menu_activate(row) end
         end
@@ -4032,13 +4194,13 @@ local function glass_panel(name, x, y, w, h, r, group)
     lo.style = "{\\blur0\\bord0\\shad0\\1c&H" .. osc_color_convert(glass_look.color) .. "&}"
     lo.alpha[1] = glass_fill_alpha()
 
-    -- hairline edge, and the light catching its top
+    -- hairline edge, and the light catching its top (the shader lights the rim itself)
     local edge = glass_edge_width()
     lo = part("_edge", 9)
     lo.style = "{\\blur0\\bord0\\shad0\\1c&HFFFFFF&}"
     lo.box.ring = edge
     lo.alpha[1] = opacity_alpha(glass_look.edge)
-    if not glass_look.contrast then
+    if not glass_look.contrast and not glass_lit() then
         local cut = math.min(r, h / 2)
         lo = part("_rim", 9)
         lo.style = string.format("{\\blur0.5\\bord0\\shad0\\1c&HFFFFFF&\\clip(%f,%f,%f,%f)}", x - 2, y - 2, x + w + 2, y + cut * 0.5)
@@ -7119,6 +7281,26 @@ mp.register_script_message("open-menu", function(kind)
     show_osc()
     open_menu(kind, nil)
 end)
+-- right click and mpv's other context menu keys open the glass menu at the pointer, or
+-- above the panel when the pointer is outside the window (keys bound in input.conf
+-- still win over these)
+for key, name in pairs({MBTN_RIGHT = "context-menu", MENU = "context-menu-key", ["Shift+F10"] = "context-menu-shift-f10"}) do
+    mp.add_key_binding(key, name, function(e)
+        if e.event ~= "up" and e.event ~= "press" then return end
+        -- the idle screen and visibility=never have no controls to open it from
+        if state.idle_active or not state.enabled then
+            mp.commandv("script-binding", "select/context-menu")
+            return
+        end
+        if menu then
+            close_menu()
+            return
+        end
+        local x, y = get_virt_mouse_pos()
+        show_osc()
+        open_menu("context", nil, {at = x >= 0 and {x = x, y = y} or nil})
+    end, {complex = true})
+end
 -- for input.conf: script-message-to modernz screenshot [video|subtitles|window]
 -- takes the screenshot without the glass blur in it
 mp.register_script_message("screenshot", function(mode)

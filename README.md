@@ -31,9 +31,10 @@
 
 ## Features
 
-- **Glass panel.** The playback controls sit on a floating panel with rounded corners. With `vo=gpu-next`, a shader blurs the video behind the panel, distorts it slightly near the edges, adds a highlight along the top edge and draws a shadow under the panel.
-- **Brightness adjustment.** Over bright video the panel is darkened and its shadow is made stronger, so white text and icons stay readable.
+- **Glass panel.** The playback controls sit on a floating panel of clear glass with rounded corners. With `vo=gpu-next`, a shader softens the video behind the panel a little, bends it near the rounded edges like a lens, lights the rim where it faces the light and draws a soft shadow under the panel. Menus use a frostier glass, so their text stays easy to read.
+- **Brightness adjustment.** Over bright video the glass is darkened and its shadow is made stronger, so white text and icons stay readable. Over dark video it stays clear.
 - **Menus.** The audio, subtitle, playlist, chapter, speed and audio output lists open as menus above their buttons. The ⋯ button opens a menu with playback speed, chapters, audio output, loop, keep on top, screenshot and statistics.
+- **Right-click menu.** A right click on the video opens a glass menu at the pointer in place of mpv's own: play and pause, audio, subtitles, speed, chapters, playlist, loop, keep on top, fullscreen, screenshot, statistics and quit.
 - **Folder playlist.** When a single file is playing, the playlist button lists the other videos in its folder in order, with Episode 10 after Episode 9, each with a small thumbnail. Picking one makes that folder the playlist, so the next and previous buttons and the end of an episode follow the folder. **Other folders** in the list's title row opens a browser for picking videos from any other folder.
 - **Thumbz.** A seekbar thumbnailer written for ModernGlass that shows a preview frame above the seekbar while you hover it. See [Thumbz](#thumbz) for how it works and how it compares to Thumbfast.
 - **Size.** The controls scale with the window up to a maximum size (`vidscale_max`), which is multiplied by the system's display scaling. On large monitors they stay the size they have on a 1080p screen.
@@ -114,10 +115,10 @@ Thumbz also makes the small thumbnails in the folder and playlist menus. Each on
 
 | | Thumbfast | Thumbz |
 | --- | :---: | :---: |
-| Time for all 24 thumbnails | 12.8 s | 9.7 s |
-| CPU time used | 14.6 s | 12.4 s |
+| Time for all 24 thumbnails | 8.2 s | 6.8 s |
+| CPU time used | 12.0 s | 10.7 s |
 
-<sub>Exact frames at 24 points of a 5-minute 1080p H.264 video, requested one after another. Default settings for both, software decoding on a 2-core machine, median of 5 runs. In 2 of the 5 runs Thumbfast did not show the exact frame for the first point, and the test moved on after 8 s. Thumbz also uses the player's hardware decoding for 1080p and larger videos when it is turned on.</sub>
+<sub>Exact frames at 24 points of a 5-minute 1080p H.264 video, requested one after another. Default settings for both, software decoding on two CPU cores, median of 5 runs. Thumbfast skips the deblocking filter when it decodes in software, which saves time and leaves blocky frames late in long gaps between keyframes. Thumbz decodes every frame exactly. Thumbz also uses the player's hardware decoding for 1080p and larger videos when it is turned on.</sub>
 
 ## Installation
 
@@ -156,11 +157,11 @@ seekbarfg_color=#0A84FF
 | Option | Default | What it does |
 | --- | --- | --- |
 | `glass_color` | `#17181C` | Panel color |
-| `glass_opacity` | `30` | Panel opacity in percent |
+| `glass_opacity` | `14` | Panel opacity in percent |
 | `glass_blur` | `yes` | Blur behind the panels |
-| `glass_refraction` | `yes` | Distortion near the edges and a highlight along the top edge |
+| `glass_refraction` | `yes` | Lens bending near the edges and light along the rim |
 | `glass_shadow` | `yes` | Shadow under the panels |
-| `panel_radius` | `28` | Corner radius of the panel |
+| `panel_radius` | `34` | Corner radius of the panel |
 | `panel_max_width` | `0` | Widest the panel gets (`0` = full width) |
 | `vidscale_max` | `1.35` | Maximum size of the controls, multiplied by the display scaling |
 
@@ -168,7 +169,7 @@ Every option is described in the [options guide](docs/USER_OPTS.md). ModernZ's o
 
 ## Controls
 
-Left click runs a button's main action, right click a second action, and middle click or <kbd>Shift</kbd>+click a third. The [controls guide](docs/CONTROLS.md) lists them all. ModernGlass adds no keyboard shortcuts; these can be added to `input.conf`:
+Left click runs a button's main action, right click a second action, and middle click or <kbd>Shift</kbd>+click a third. A right click anywhere else, the <kbd>Menu</kbd> key or <kbd>Shift</kbd>+<kbd>F10</kbd> opens the right-click menu. The [controls guide](docs/CONTROLS.md) lists them all. ModernGlass adds no keyboard shortcuts; these can be added to `input.conf`:
 
 ```
 v   script-binding modernz/visibility        # cycle visibility modes

@@ -140,15 +140,15 @@ These options apply to the default layout's panel and to the menus, tooltips, th
 | Option                    | Value   | Description                                                                                                                                      |
 | ------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | glass_color               | #17181C | tint of glass surfaces                                                                                                                           |
-| glass_opacity             | 30      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
-| glass_border_opacity      | 14      | opacity of the hairline light edge around glass surfaces, in percent                                                                             |
+| glass_opacity             | 14      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
+| glass_border_opacity      | 8       | opacity of the hairline light edge around glass surfaces, in percent                                                                             |
 | glass_shadow              | yes     | soft shadow under glass surfaces                                                                                                                 |
 | glass_blur                | yes     | blur the video behind glass surfaces (needs `vo=gpu-next`; off for rotated video)                                                               |
-| glass_refraction          | yes     | distort the video near the edges of glass surfaces and add a highlight along the top edge (with `glass_blur`)                                                            |
+| glass_refraction          | yes     | bend the video near the rounded edges of glass surfaces like a lens and light their rims (with `glass_blur`)                                                             |
 | glass_reduce_transparency | no      | accessibility: frosty, nearly opaque glass                                                                                                       |
 | glass_increase_contrast   | no      | accessibility: black glass with a visible border                                                                                                 |
 | reduce_motion             | no      | accessibility: no spring or scale animations (fades stay)                                                                                        |
-| panel_radius              | 28      | corner radius of the floating panel                                                                                                              |
+| panel_radius              | 34      | corner radius of the floating panel                                                                                                              |
 | panel_margin              | 20      | distance between the floating panel and the window edges                                                                                         |
 | panel_max_width           | 0       | widest the floating panel gets (`0` = always full width)                                                                                         |
 | muted_text_color          | #AEB7C4 | color of secondary text: duration, chapter title, menu details                                                                                   |
