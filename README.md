@@ -112,7 +112,7 @@ Left click runs a button's main action, right click a second one, and middle cli
 
 ## Credits
 
-Based on [ModernZ](https://github.com/Samillion/ModernZ) by Samillion, which comes from [dexeonify/ModernX](https://github.com/dexeonify/mpv-config/blob/main/scripts/modernx.lua), [cyl0/ModernX](https://github.com/cyl0/ModernX), [maoiscat/mpv-osc-modern](https://github.com/maoiscat/mpv-osc-modern) and mpv's [osc.lua](https://github.com/mpv-player/mpv/blob/master/player/lua/osc.lua). Font: [Inter](https://rsms.me/inter/) by Rasmus Andersson. Icons: [Fluent System Icons](https://github.com/microsoft/fluentui-system-icons) by Microsoft and [Material Symbols](https://github.com/google/material-design-icons) by Google. The top image shows The Ghost in the Shell (2026), episode 1. The landscapes in the other screenshots were generated for this README.
+Based on [ModernZ](https://github.com/Samillion/ModernZ) by Samillion, which comes from [dexeonify/ModernX](https://github.com/dexeonify/mpv-config/blob/main/scripts/modernx.lua), [cyl0/ModernX](https://github.com/cyl0/ModernX), [maoiscat/mpv-osc-modern](https://github.com/maoiscat/mpv-osc-modern) and mpv's [osc.lua](https://github.com/mpv-player/mpv/blob/master/player/lua/osc.lua). Font: [Inter](https://rsms.me/inter/) by Rasmus Andersson. Icons: [Fluent System Icons](https://github.com/microsoft/fluentui-system-icons) by Microsoft and [Material Symbols](https://github.com/google/material-design-icons) by Google. The screenshots show The Ghost in the Shell (2026), episode 1.
 
 ## License
 
