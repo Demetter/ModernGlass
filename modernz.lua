@@ -6260,6 +6260,8 @@ local function hide_osc()
     -- clear input area immediately so clicks pass through while the bar is
     -- hidden, rather than waiting for the next render tick to do it
     set_virt_mouse_area(0, 0, 0, 0, "input")
+    set_virt_mouse_area(0, 0, 0, 0, "input_wheel")
+    set_virt_mouse_area(0, 0, 0, 0, "input_mid")
     -- reset margins before hide_bar wipes the overlay
     if not state.enabled then
         reset_margins()
@@ -6332,7 +6334,6 @@ end
 local click_keys = {
     "mbtn_left_up", "mbtn_left_down", "mbtn_left_press",
     "mbtn_right_up", "mbtn_right_down", "mbtn_right_press",
-    "wheel_up_press", "wheel_down_press",
 }
 local function has_click_action(e)
     if not e.eventresponder then return false end
@@ -6342,15 +6343,33 @@ local function has_click_action(e)
     return false
 end
 
+-- wheel and middle click get their own areas, so over an element that doesn't
+-- handle them they fall through to input.conf
+local function has_wheel_action(e)
+    if not e.eventresponder then return false end
+    return e.eventresponder["wheel_up_press"] ~= nil or e.eventresponder["wheel_down_press"] ~= nil
+end
+
+local function has_mid_action(e)
+    if not e.eventresponder then return false end
+    return e.eventresponder["shift+mbtn_left_down"] ~= nil
+end
+
+local input_areas = {"input", "input_wheel", "input_mid"}
+
+local function set_input_areas(x0, y0, x1, y1)
+    for _, name in ipairs(input_areas) do set_virt_mouse_area(x0, y0, x1, y1, name) end
+end
+
 local function refresh_input_area()
     if not state.osc_visible then
-        set_virt_mouse_area(0, 0, 0, 0, "input")
+        set_input_areas(0, 0, 0, 0)
         return
     end
 
     -- with a menu open every click is ours (a click outside the menu closes it)
     if menu then
-        set_virt_mouse_area(0, 0, osc_param.playresx, osc_param.playresy, "input")
+        set_input_areas(0, 0, osc_param.playresx, osc_param.playresy)
         set_virt_mouse_area(0, 0, osc_param.playresx, osc_param.playresy, "menu-hover")
         return
     end
@@ -6358,30 +6377,35 @@ local function refresh_input_area()
     -- during an active drag, keep the input area locked to the held element
     if state.active_element and elements[state.active_element] then
         local e = elements[state.active_element]
-        set_virt_mouse_area(e.hitbox.x1, e.hitbox.y1, e.hitbox.x2, e.hitbox.y2, "input")
+        set_input_areas(e.hitbox.x1, e.hitbox.y1, e.hitbox.x2, e.hitbox.y2)
         return
     end
 
     -- bail early if the cursor isn't inside the bottom bar zone at all
     if not mouse_in_area("input") then
-        set_virt_mouse_area(0, 0, 0, 0, "input")
+        set_input_areas(0, 0, 0, 0)
         return
     end
 
-    -- find the topmost element with direct click handlers under the cursor;
+    -- find the topmost element under the cursor for each input type in one pass;
     -- layer order matches process_event's dispatch priority
-    local hovered = nil
+    local hovered = {input = nil, input_wheel = nil, input_mid = nil}
     for n = 1, #elements do
         local e = elements[n]
-        if e.hitbox and has_click_action(e) and mouse_hit(e) then
-            hovered = e
+        if e.hitbox and mouse_hit(e) then
+            if has_click_action(e) then hovered.input = e end
+            if has_wheel_action(e) then hovered.input_wheel = e end
+            if has_mid_action(e)   then hovered.input_mid = e end
         end
     end
 
-    if hovered then
-        set_virt_mouse_area(hovered.hitbox.x1, hovered.hitbox.y1, hovered.hitbox.x2, hovered.hitbox.y2, "input")
-    else
-        set_virt_mouse_area(0, 0, 0, 0, "input")
+    for _, name in ipairs(input_areas) do
+        local e = hovered[name]
+        if e then
+            set_virt_mouse_area(e.hitbox.x1, e.hitbox.y1, e.hitbox.x2, e.hitbox.y2, name)
+        else
+            set_virt_mouse_area(0, 0, 0, 0, name)
+        end
     end
 end
 
@@ -6389,7 +6413,9 @@ end
 -- held = true drops the flag so the cursor stays visible while a button/slider is held.
 local function apply_cursor_hide_flag(held)
     local flag = (not held) and state.cursor_hide_flag or nil
-    if state.input_enabled then mp.enable_key_bindings("input", flag) end
+    if state.input_enabled then
+        for _, name in ipairs(input_areas) do mp.enable_key_bindings(name, flag) end
+    end
     if state.windowcontrols_buttons then mp.enable_key_bindings("window-controls", flag) end
     if state.windowcontrols_ontop then mp.enable_key_bindings("window-controls-ontop", flag) end
 end
@@ -6604,10 +6630,12 @@ local function render()
 
     -- sync input area to cursor position
     if state.osc_visible ~= state.input_enabled then
-        if state.osc_visible then
-            mp.enable_key_bindings("input", state.cursor_hide_flag)
-        else
-            mp.disable_key_bindings("input")
+        for _, name in ipairs(input_areas) do
+            if state.osc_visible then
+                mp.enable_key_bindings(name, state.cursor_hide_flag)
+            else
+                mp.disable_key_bindings(name)
+            end
         end
         state.input_enabled = state.osc_visible
     end
@@ -6934,16 +6962,24 @@ mp.set_key_bindings({
                             function() process_event("mbtn_right", "down")  end},
     {"shift+mbtn_right",    function() process_event("shift+mbtn_right", "up") end,
                             function() process_event("shift+mbtn_right", "down")  end},
-    -- alias to shift_mbtn_left for single-handed mouse use
-    {"mbtn_mid",            function() process_event("shift+mbtn_left", "up") end,
-                            function() process_event("shift+mbtn_left", "down")  end},
-    {"wheel_up",            function() process_event("wheel_up", "press") end},
-    {"wheel_down",          function() process_event("wheel_down", "press") end},
     {"mbtn_left_dbl",       "ignore"},
     {"shift+mbtn_left_dbl", "ignore"},
     {"mbtn_right_dbl",      "ignore"},
 }, "input", "force")
 mp.enable_key_bindings("input", state.cursor_hide_flag)
+
+mp.set_key_bindings({
+    {"wheel_up",   function() process_event("wheel_up", "press") end},
+    {"wheel_down", function() process_event("wheel_down", "press") end},
+}, "input_wheel", "force")
+mp.enable_key_bindings("input_wheel", state.cursor_hide_flag)
+
+-- alias to shift_mbtn_left for single-handed mouse use
+mp.set_key_bindings({
+    {"mbtn_mid", function() process_event("shift+mbtn_left", "up") end,
+                 function() process_event("shift+mbtn_left", "down")  end},
+}, "input_mid", "force")
+mp.enable_key_bindings("input_mid", state.cursor_hide_flag)
 
 mp.set_key_bindings({
     {"mbtn_left",           function() process_event("mbtn_left", "up") end,
@@ -7008,6 +7044,8 @@ local function visibility_mode(mode, no_osd)
     -- recalculated on the next render cycle, except in 'never' mode where it
     -- will just stay disabled.
     mp.disable_key_bindings("input")
+    mp.disable_key_bindings("input_wheel")
+    mp.disable_key_bindings("input_mid")
     mp.disable_key_bindings("window-controls")
     mp.disable_key_bindings("window-controls-title")
     mp.disable_key_bindings("window-controls-ontop")
@@ -7224,5 +7262,7 @@ set_tick_delay()
 visibility_mode(user_opts.visibility, true)
 
 set_virt_mouse_area(0, 0, 0, 0, "input")
+set_virt_mouse_area(0, 0, 0, 0, "input_wheel")
+set_virt_mouse_area(0, 0, 0, 0, "input_mid")
 set_virt_mouse_area(0, 0, 0, 0, "window-controls")
 set_virt_mouse_area(0, 0, 0, 0, "window-controls-title")
