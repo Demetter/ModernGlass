@@ -1774,6 +1774,7 @@ local glass_blur = {path = nil, sig = nil, suspended = false, failed = false, lo
 
 local function glass_blur_active()
     if glass_blur.path == nil or glass_blur.failed then return false end
+    if not user_opts.glass_blur then return false end
     -- the shader sees the video before mpv rotates or flips it onto the screen, so
     -- rotated video gets the plain tinted glass instead (glass_blur.rotated is observed)
     return not glass_blur.rotated
