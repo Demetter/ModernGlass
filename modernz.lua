@@ -3488,7 +3488,8 @@ local function menu_activate(index)
         local stack = {}
         for i = 1, #menu.stack - 1 do stack[i] = menu.stack[i] end
         local prev = menu.stack[#menu.stack]
-        open_menu(prev.kind, menu.anchor, {from_back = true, arg = prev.arg, scroll = prev.scroll, stack = stack, at = menu.at})
+        open_menu(prev.kind, menu.anchor, {from_back = true, arg = prev.arg, scroll = prev.scroll, stack = stack,
+                                           at = menu.at, row_y = prev.row_y})
         return
     end
     local item = index == 0 and menu.header or menu.items[index]
@@ -3496,8 +3497,11 @@ local function menu_activate(index)
     if item.submenu then
         local stack = {}
         for i, v in ipairs(menu.stack) do stack[i] = v end
-        stack[#stack + 1] = {kind = menu.kind, arg = menu.arg, scroll = menu.scroll}
-        open_menu(item.submenu, menu.anchor, {back = true, arg = item.arg, stack = stack, at = menu.at})
+        stack[#stack + 1] = {kind = menu.kind, arg = menu.arg, scroll = menu.scroll, row_y = menu.row_y}
+        -- at the pointer, the menu a row opens takes that row's place
+        local g = menu.geo
+        local row_y = menu.at and g and (index == 0 and g.y + MENU.pad or g.top + g.ys[index - menu.scroll]) or nil
+        open_menu(item.submenu, menu.anchor, {back = true, arg = item.arg, stack = stack, at = menu.at, row_y = row_y})
         return
     end
     close_menu()
@@ -3561,7 +3565,8 @@ close_menu = function()
 end
 
 -- opts: back = kind of the menu this one was opened from (shows a back row), at = the
--- pointer, for a menu that opens there instead of above a button
+-- pointer, for a menu that opens there instead of above a button, row_y = the top of the
+-- row it was opened from (with at)
 open_menu = function(kind, anchor_name, opts)
     opts = opts or {}
     -- the same button again closes its menu (and any submenu opened from it)
@@ -3595,7 +3600,7 @@ open_menu = function(kind, anchor_name, opts)
     menu = {kind = kind, arg = opts.arg, stack = stack, title = title and esc(title) or nil, items = items,
             header = #stack == 0 and header or nil,
             covers = covers, row_h = covers and COVER_ROW_H or MENU.row_h,
-            anchor = anchor_name, at = opts.at, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
+            anchor = anchor_name, at = opts.at, row_y = opts.row_y, back = #stack > 0, icons = icons_mode, hover = nil, t0 = mp.get_time(),
             -- going into a submenu or back: the card reshapes from the old one in place and
             -- the new rows slide in from the side they come from
             keep_x = had_menu and origin and origin.x or nil,
@@ -3677,12 +3682,12 @@ local function menu_geometry(m)
 
     local header = m.title and MENU.header_h or MENU.pad
     local at = m.at
-    local ax, ay, avail = W / 2, H - 120, nil
+    local ax, ay, avail, floor_y = W / 2, H - 120, nil, nil
     if at then
         -- at the pointer, above the controls: below the pointer, or above it, or else as
-        -- low as it goes; to the right of it unless there's no room. The menus opened
-        -- from it keep the edge it was placed by.
-        local floor_y = H - 12
+        -- low as it goes; to the right of it unless there's no room. A menu opened from
+        -- one of its rows takes that row's place, moved up if it would reach the controls.
+        floor_y = H - 12
         local p, sb = state.panel_rect, state.seekbar_element
         if p then floor_y = p.y1 - 10
         elseif sb and sb.hitbox then floor_y = sb.hitbox.y1 - 10 end
@@ -3696,7 +3701,11 @@ local function menu_geometry(m)
             at.edge = (at.up and full > y - 12) and floor_y or y
             at.left = at.x + w > W - 12
         end
-        avail = (at.up and at.edge - 12 or floor_y - at.edge) - header - MENU.pad
+        if m.row_y then
+            avail = floor_y - 12 - header - MENU.pad
+        else
+            avail = (at.up and at.edge - 12 or floor_y - at.edge) - header - MENU.pad
+        end
     else
         for _, e in ipairs(elements) do
             if e.name == m.anchor and e.hitbox then
@@ -3727,7 +3736,11 @@ local function menu_geometry(m)
     local x, top, ox, oy
     if at then
         x = math.max(12, math.min(W - 12 - w, at.left and at.x - w or at.x))
-        top = at.up and at.edge - h or at.edge
+        if m.row_y then
+            top = math.max(12, math.min(floor_y - h, m.row_y - MENU.pad))
+        else
+            top = at.up and at.edge - h or at.edge
+        end
         ox, oy = at.x, at.y
     else
         local p = state.panel_rect
