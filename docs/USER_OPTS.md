@@ -32,7 +32,7 @@ Create `modernz.conf` in your mpv script-opts directory:
 
 | Option             | Value   | Description                                                                                                                                                           |
 | ------------------ | ------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| hidetimeout        | 2000    | time (in ms) before OSC hides if no mouse movement                                                                                                                    |
+| hidetimeout        | 1500    | time (in ms) before OSC hides if no mouse movement                                                                                                                    |
 | keep_with_cursor   | yes     | keep OSC visible while cursor hovers over bottom or top bar                                                                                                           |
 | fadeduration       | 200     | fade-out duration (in ms), set to `"0"` for no fade                                                                                                                   |
 | fadein             | yes     | whether to enable fade-in effect                                                                                                                                      |
@@ -163,7 +163,7 @@ These options apply to the default layout's panel and to the menus, tooltips, th
 | osc_color                         | `#000000` | accent color of the OSC and title bar                                                             |
 | window_title_color                | `#FFFFFF` | color of the title in borderless/fullscreen mode                                                  |
 | window_controls_color             | `#FFFFFF` | color of the window controls (close, minimize, maximize) in borderless/fullscreen mode            |
-| windowcontrols_close_hover        | `#E81123` | color of close window control on hover                                                            |
+| windowcontrols_close_hover        | `#F45C5B` | color of close window control on hover                                                            |
 | windowcontrols_max_hover          | `#F8BC3A` | color of maximize window controls on hover                                                        |
 | windowcontrols_min_hover          | `#43CB44` | color of minimize window controls on hover                                                        |
 | title_color                       | `#FFFFFF` | color of the title                                                                                |
