@@ -6710,6 +6710,8 @@ tick = function()
     if not state.enabled then return end
 
     if state.idle_active then
+        -- the idle screen doesn't draw menus: close one left open so its keys and covers go
+        if menu then close_menu() end
         msg.trace("idle message")
         if user_opts.idlescreen then
             local display_aspect = state.osd_dimensions.aspect
@@ -7070,6 +7072,8 @@ end)
 mp.register_script_message("osc-visibility", visibility_mode)
 -- for input.conf: script-message-to modernz open-menu <audio|sub|playlist|chapter|audio-device>
 mp.register_script_message("open-menu", function(kind)
+    -- with no OSC to draw it on, the menu would stay invisible and keep its keys bound
+    if not state.enabled or state.idle_active then return end
     show_osc()
     open_menu(kind, nil)
 end)
