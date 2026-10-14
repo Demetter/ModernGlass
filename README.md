@@ -117,7 +117,7 @@ Thumbz also makes the small thumbnails in the folder and playlist menus. Each on
 | Time for all 24 thumbnails | 12.8 s | 9.7 s |
 | CPU time used | 14.6 s | 12.4 s |
 
-<sub>Exact frames at 24 points of a 5-minute 1080p H.264 video, requested one after another. Default settings for both, software decoding on a 2-core machine, median of 5 runs. In 2 of the 5 runs Thumbfast did not show the exact frame for the first point, and the test moved on after 8 s. Thumbz also uses the player's hardware decoding when it is turned on.</sub>
+<sub>Exact frames at 24 points of a 5-minute 1080p H.264 video, requested one after another. Default settings for both, software decoding on a 2-core machine, median of 5 runs. In 2 of the 5 runs Thumbfast did not show the exact frame for the first point, and the test moved on after 8 s. Thumbz also uses the player's hardware decoding for 1080p and larger videos when it is turned on.</sub>
 
 ## Installation
 

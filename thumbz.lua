@@ -50,7 +50,7 @@ local o = {
     storyboard = 120,         -- thumbnails pre-rendered across the file once the controls appear (0 = off)
     storyboard_gap = 5,       -- at least this many seconds between storyboard thumbnails
     cache_size = 200,         -- thumbnails kept on disk for the current file (minimum 2)
-    hwdec = "auto",           -- renderer decoding: auto (same hardware decoder as the player), no, or an mpv --hwdec value
+    hwdec = "auto",           -- renderer decoding: auto (software below 1080p, else the player's hardware decoder), no, or an mpv --hwdec value
     threads = 2,              -- decoder threads in the renderer for software decoding (0 = automatic)
     scaler = "bilinear",      -- downscaling: fast_bilinear, bilinear, bicubic, area
     tone_mapping = "auto",    -- HDR to SDR: auto, no, clip, linear, gamma, reinhard, hable, mobius
@@ -115,7 +115,7 @@ local scheduler_source = [=[
 -- While paused, mpv encodes exactly one frame per completed seek, and every frame
 -- gets its own numbered file, so completed seeks and frame files line up one-to-one
 -- and in order. That makes it safe to abandon a slow seek for a newer request.
-local CMD, RES, OUT_PREFIX, JOB, IDLE_QUIT = %q, %q, %q, %q, %d
+local CMD, RES, OUT_PREFIX, JOB, IDLE_QUIT, POKED = %q, %q, %q, %q, %d, %s
 local utils = require "mp.utils"
 
 local function report(line)
@@ -312,16 +312,17 @@ local function read_commands()
     return true
 end
 
--- poll quickly while requests are coming in, back off when idle
+-- poll quickly while requests are coming in, back off when idle. Where the main player
+-- pokes us for every request (Windows), polling only has to notice that it's gone.
 local timer
-timer = mp.add_periodic_timer(0.008, function()
+timer = mp.add_periodic_timer(POKED and 0.5 or 0.008, function()
     read_commands()
     local idle = mp.get_time() - last_activity
     if IDLE_QUIT > 0 and idle > IDLE_QUIT and not (issued or executing or waiting[1]) then
         mp.command("quit")
         return
     end
-    local interval = idle < 3 and 0.008 or (idle < 30 and 0.1 or 0.5)
+    local interval = (POKED or idle >= 30) and 0.5 or (idle < 3 and 0.008 or 0.1)
     if timer.timeout ~= interval then
         timer.timeout = interval
         timer:kill()
@@ -745,9 +746,10 @@ local function add_if(args, name, value)
     if has_option(name) then args[#args + 1] = "--" .. name .. "=" .. value end
 end
 
--- Hardware decoding in the renderer. "auto" uses the copy-back variant of the decoder
--- the player itself is using (so e.g. a laptop never wakes a second GPU just for
--- thumbnails), then mpv's own safe choice, then software decoding.
+-- Decoding in the renderer. "auto" decodes videos below 1080p on the CPU, which is
+-- quicker there than copying every frame back from the GPU, and larger ones with the
+-- copy-back variant of the decoder the player itself is using (so e.g. a laptop never
+-- wakes a second GPU just for thumbnails), then mpv's own safe choice, then software.
 local copy_variants = {
     nvdec = "nvdec-copy", cuda = "nvdec-copy", d3d11va = "d3d11va-copy", dxva2 = "dxva2-copy",
     vaapi = "vaapi-copy", videotoolbox = "videotoolbox-copy",
@@ -755,6 +757,8 @@ local copy_variants = {
 
 local function renderer_hwdec()
     if o.hwdec ~= "auto" then return o.hwdec end
+    local p = props["video-out-params"]
+    if p.w * p.h < 1920 * 1080 then return "no" end
     local api = (mp.get_property("hwdec-current") or ""):gsub("%-copy$", "")
     local copy = copy_variants[api]
     -- a list of decoders to try in order needs mpv 0.36+ (where the option is a list)
@@ -782,7 +786,8 @@ local function spawn(time)
         broken = true
         return false
     end
-    f:write(string.format(scheduler_source, files.cmd, files.res, files.out_prefix, base .. "_", math.floor(o.idle_quit)))
+    f:write(string.format(scheduler_source, files.cmd, files.res, files.out_prefix, base .. "_", math.floor(o.idle_quit),
+                          tostring(is_windows)))
     f:close()
     f = io.open(files.res, "wb")
     if f then f:close() end
@@ -805,8 +810,7 @@ local function spawn(time)
         "--pause", "--keep-open=always", "--start=" .. string.format("%.3f", time),
         "--hr-seek=" .. (exact and "yes" or "no"),
         "--aid=no", "--sid=no", "--demuxer-readahead-secs=0", "--demuxer-max-bytes=128KiB",
-        "--vd-lavc-skiploopfilter=all", "--vd-lavc-fast",
-        "--vd-lavc-threads=" .. math.floor(o.threads), "--hwdec=" .. renderer_hwdec(),
+        "--vd-lavc-fast", "--vd-lavc-threads=" .. math.floor(o.threads), "--hwdec=" .. renderer_hwdec(),
         "--vf=" .. build_vf(size), "--video-rotate=" .. (props["video-rotate"] or 0),
         "--ovc=rawvideo", "--of=image2", "--ofopts=atomic_writing=1", "--o=" .. files.out_prefix .. "%d.out",
         "--scripts=" .. files.helper,
@@ -1359,8 +1363,8 @@ local function cover_args(path, out)
         mpv_candidates[1], "--no-config", "--msg-level=all=no", "--input-terminal=no",
         "--load-scripts=no", "--osc=no", "--ytdl=no", "--input-default-bindings=no",
         "--pause", "--start=20%", "--hr-seek=no", "--aid=no", "--sid=no",
-        "--vd-lavc-skiploopfilter=all", "--vd-lavc-fast",
-        "--vd-lavc-threads=" .. math.floor(o.threads), "--hwdec=" .. renderer_hwdec(),
+        -- one frame: the CPU decodes it sooner than a hardware decoder starts up
+        "--vd-lavc-fast", "--vd-lavc-threads=" .. math.floor(o.threads), "--hwdec=no",
         "--vf=" .. cover_filters(COVER_W, COVER_H), "--scripts=" .. cover_script(),
         "--ovc=rawvideo", "--of=rawvideo", "--o=" .. out,
     }) do args[#args + 1] = arg end
