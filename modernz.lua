@@ -3331,8 +3331,11 @@ local function menu_items(kind, arg)
                     action = function() mp.command(user_opts.file_loop_mbtn_left_command) end})
         end
         if user_opts.shuffle_button and (state.playlist_count or 0) > 1 then
-            toggle({icon = glyph_of(icons.shuffle_on), label = locale.shuffle_menu,
-                    action = function() mp.command(user_opts.shuffle_mbtn_left_command) end})
+            toggle({icon = glyph_of(icons.shuffle_on), label = locale.shuffle_menu, active = state.shuffled,
+                    action = function()
+                        state.shuffled = not state.shuffled
+                        mp.command("playlist-" .. (state.shuffled and "shuffle" or "unshuffle"))
+                    end})
         end
         if user_opts.ontop_button then
             toggle({icon = glyph_of(icons.ontop_on), label = locale.keep_on_top, active = state.ontop,
