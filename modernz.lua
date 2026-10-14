@@ -58,9 +58,9 @@ local user_opts = {
     -- Elements display
     show_title = true,                     -- show title in the OSC
     title = "${media-title}",              -- title: "${media-title}" or "${filename}"
-    title_font_size = 17,                  -- title font size
+    title_font_size = 19,                  -- title font size
     truncate_title = false,                -- truncate title with ellipsis if it overflows
-    chapter_title_font_size = 14,          -- chapter title font size
+    chapter_title_font_size = 15,          -- chapter title font size
 
     cache_info = false,                    -- show cached time information
     cache_info_speed = false,              -- show cache speed per second
@@ -74,7 +74,7 @@ local user_opts = {
     timems = false,                        -- show timecodes with milliseconds
     unicodeminus = false,                  -- use the Unicode minus sign in remaining time
     time_format = "dynamic",               -- "dynamic" or "fixed". dynamic shows MM:SS when possible, fixed always shows HH:MM:SS
-    time_font_size = 14,                   -- font size of the time display
+    time_font_size = 15,                   -- font size of the time display
 
     tooltip_font_size = 13,                -- tooltips font size
     speed_font_size = 15,                  -- speed button font size
@@ -221,7 +221,7 @@ local user_opts = {
 
     -- glass look (layout=default panel, menus, tooltips, thumbnails, window controls)
     glass_color = "#17181C",               -- tint of glass surfaces
-    glass_opacity = 14,                    -- tint strength in percent, from clear (0) to solid (100); at least 62 when the video behind can't be frosted
+    glass_opacity = 38,                    -- tint strength in percent, from clear (0) to solid (100); at least 62 when the video behind can't be frosted
     glass_border_opacity = 8,              -- opacity of the hairline light edge around glass surfaces in percent
     glass_shadow = true,                   -- soft shadow under glass surfaces
     glass_blur = true,                     -- blur the video behind glass surfaces (needs vo=gpu-next)
@@ -1792,12 +1792,15 @@ vec4 hook() {
                       + MZG_C_tex(q + vec2(0.0, o.y)).rgb + MZG_C_tex(q - vec2(0.0, o.y)).rgb, luma) / 5.0;
     g = g * (1.0 - mzg_tone * 0.52 * smoothstep(0.30, 1.0, under)) + mzg_tone * 0.035 * (1.0 - under);
 
+    // the rounded edge darkens toward the rim, so the shape holds over bright pictures
+    g *= 1.0 - alpha * mzg_lens * 0.20 * e * e;
+
     // light: a hairline along the rim, brightest where it faces the light (upper left) and
     // where the light leaves again (lower right), and a soft glow across the rounded edge
     float f = dot(n, vec2(-0.6, -0.8));
     float lit = 0.25 + 0.75 * max(f, 0.0) * max(f, 0.0) + 0.45 * max(-f, 0.0) * max(-f, 0.0);
     float line = exp(-2.0 * (d + 0.8) * (d + 0.8));
-    g += alpha * mzg_lens * lit * (0.75 * line + 0.12 * e * e * e);
+    g += alpha * mzg_lens * lit * (1.05 * line + 0.10 * e * e * e);
 
     float m = clamp(0.5 - d, 0.0, 1.0) * mzg_strength * alpha;
     return vec4(mix(c.rgb, g, m), c.a);

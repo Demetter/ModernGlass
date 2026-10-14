@@ -54,9 +54,9 @@ Create `modernz.conf` in your mpv script-opts directory:
 | ----------------------- | ---------------- | -------------------------------------------------------------------------------- |
 | show_title              | yes              | show title in the OSC                                                            |
 | title                   | `${media-title}` | title: `"${media-title}"` or `"${filename}"`                                     |
-| title_font_size         | 17               | font size of the title text                                                      |
+| title_font_size         | 19               | font size of the title text                                                      |
 | truncate_title          | no               | truncate title with ellipsis if it overflows                                     |
-| chapter_title_font_size | 14               | chapter title font size                                                          |
+| chapter_title_font_size | 15               | chapter title font size                                                          |
 | show_chapter_title      | yes              | show chapter title                                                               |
 | chapter_above_title     | no               | show chapter above title                                                         |
 | chapter_fmt             | %s               | format for chapter display on seekbar hover (set to `"no"` to disable)           |
@@ -64,7 +64,7 @@ Create `modernz.conf` in your mpv script-opts directory:
 | timems                  | no               | show timecodes with milliseconds                                                 |
 | unicodeminus            | no               | use the Unicode minus sign in remaining time                                     |
 | time_format             | dynamic          | `"dynamic"` or `"fixed"`. shows MM:SS when possible, fixed always shows HH:MM:SS |
-| time_font_size          | 14               | font size of the time display                                                    |
+| time_font_size          | 15               | font size of the time display                                                    |
 | cache_info              | no               | show cached time information                                                     |
 | cache_info_speed        | no               | show current cache speed per second                                              |
 | cache_info_font_size    | 12               | font size of the cache information                                               |
@@ -140,7 +140,7 @@ These options apply to the default layout's panel and to the menus, tooltips, th
 | Option                    | Value   | Description                                                                                                                                      |
 | ------------------------- | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | glass_color               | #17181C | tint of glass surfaces                                                                                                                           |
-| glass_opacity             | 14      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
+| glass_opacity             | 38      | tint strength in percent, from clear (`0`) to solid (`100`); without the frosted backdrop glass stays at least 62% opaque so text stays readable |
 | glass_border_opacity      | 8       | opacity of the hairline light edge around glass surfaces, in percent                                                                             |
 | glass_shadow              | yes     | soft shadow under glass surfaces                                                                                                                 |
 | glass_blur                | yes     | blur the video behind glass surfaces (needs `vo=gpu-next`; off for rotated video)                                                               |
