@@ -1850,6 +1850,7 @@ end
 -- menus); an empty list turns the blur off
 local function glass_blur_update(rects)
     if glass_blur.path == nil or glass_blur.failed then return end
+    if not state.osc_visible and not state.wc_visible then rects = {} end
     if glass_blur.suspended or not glass_blur_active() then rects = {} end
     local d = state.osd_dimensions or {}
     local W, H = d.w or 0, d.h or 0
@@ -7206,6 +7207,9 @@ local function visibility_mode(mode, no_osd)
         always_on(true)
     elseif mode == "never" then
         enable_osc(false)
+        state.osc_visible = false
+        state.wc_visible = false
+        glass_blur_update({})
     else
         msg.warn("Ignoring unknown visibility mode '" .. mode .. "'")
         return
